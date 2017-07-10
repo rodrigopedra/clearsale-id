@@ -163,7 +163,7 @@ class Address implements XmlEntityInterface
 
     public function setZipCode( $zipCode )
     {
-        $zipCode = preg_replace( '/[^0-9]/', '', $zipCode );
+        $zipCode = preg_replace( '/\D/', '', $zipCode );
 
         if (empty( $zipCode )) {
             throw new InvalidArgumentException( 'ZipCode is empty!' );

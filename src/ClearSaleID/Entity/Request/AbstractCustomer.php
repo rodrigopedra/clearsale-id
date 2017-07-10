@@ -128,7 +128,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
      */
     public function setLegalDocument1( $legalDocument1 )
     {
-        $legalDocument1 = preg_replace( '/[^0-9]/', '', $legalDocument1 );
+        $legalDocument1 = preg_replace( '/\D/', '', $legalDocument1 );
 
         if (empty( $legalDocument1 )) {
             throw new InvalidArgumentException( 'LegalDocument1 is empty!' );
@@ -157,7 +157,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
      */
     public function setLegalDocument2( $legalDocument2 )
     {
-        $legalDocument2 = preg_replace( '/[^0-9]/', '', $legalDocument2 );
+        $legalDocument2 = preg_replace( '/\D/', '', $legalDocument2 );
 
         if (empty( $legalDocument2 )) {
             throw new InvalidArgumentException( 'LegalDocument2 is empty!' );
@@ -371,6 +371,8 @@ abstract class AbstractCustomer implements XmlEntityInterface
 
         if ($this->address) {
             $this->address->toXML( $XMLWriter );
+        } else {
+            throw new RequiredFieldException( 'Field Address of the Customer object is required' );
         }
 
         if (count( $this->phones ) > 0) {
@@ -381,6 +383,8 @@ abstract class AbstractCustomer implements XmlEntityInterface
             }
 
             $XMLWriter->endElement();
+        } else {
+            throw new RequiredFieldException( 'Field Phones of the Customer object is required' );
         }
     }
 }
