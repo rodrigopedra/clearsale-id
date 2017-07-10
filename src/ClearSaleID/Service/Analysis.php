@@ -26,8 +26,11 @@ class Analysis
     /** @var Integration */
     private $integration;
 
-    /** @var */
+    /** @var  PackageStatus */
     private $packageStatusResponse;
+
+    /** @var  TransactionStatus */
+    private $transactionStatusResponse;
 
     /**
      * Construtor para gerar a integração com a ClearSale
@@ -88,6 +91,26 @@ class Analysis
     }
 
     /**
+     * Método para atualizar o pedido com o status do pagamento
+     *
+     * @param  string $orderId
+     * @param  string $newStatusCode
+     * @param  string $notes
+     *
+     * @return boolean
+     */
+    public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
+    {
+        if (!in_array( $newStatusCode, self::$newStatusCodeList )) {
+            throw new InvalidArgumentException( sprintf( 'Invalid new status code (%s)', $newStatusCode ) );
+        }
+
+        $this->transactionStatusResponse = $this->integration->updateOrderStatus( $orderId, $newStatusCode, $notes );
+
+        return true;
+    }
+
+    /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
      * @return PackageStatus
@@ -98,20 +121,12 @@ class Analysis
     }
 
     /**
-     * Método para atualizar o pedido com o status do pagamento
-     *
-     * @param  string $orderId
-     * @param  string $newStatusCode
-     * @param  string $notes
+     * Retorna os detalhes do pedido após o pedido de análise
      *
      * @return TransactionStatus
      */
-    public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
+    public function getTransactionStatus()
     {
-        if (!in_array( $newStatusCode, self::$newStatusCodeList )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid new status code (%s)', $newStatusCode ) );
-        }
-
-        return $this->integration->updateOrderStatus( $orderId, $newStatusCode, $notes );
+        return $this->transactionStatusResponse;
     }
 }
