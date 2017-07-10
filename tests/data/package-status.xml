@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ClearID>
+    <PackageStatus>
+        <TransactionID>55929546-3c1e-4be0-b561-03ab72e74b32</TransactionID>
+        <StatusCode>0</StatusCode>
+        <Message>OK</Message>
+        <Pedidos>
+            <Pedido>
+                <ID>TEST-0A44444E6CEA465E85737421E651C70B</ID>
+                <Score>79.9400</Score>
+                <Status>APA</Status>
+                <URLQuestionario/>
+            </Pedido>
+        </Pedidos>
+    </PackageStatus>
+</ClearID>

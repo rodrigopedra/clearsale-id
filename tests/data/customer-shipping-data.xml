@@ -1,0 +1,23 @@
+<DadosEntrega>
+    <UsuarioID>1</UsuarioID>
+    <TipoUsuario>1</TipoUsuario>
+    <DocumentoLegal1>63165236372</DocumentoLegal1>
+    <Nome>Fulano da Silva</Nome>
+    <Endereco>
+        <Logradouro>Rua José de Oliveira Coutinho</Logradouro>
+        <Complemento>apto. 500</Complemento>
+        <Numero>151</Numero>
+        <Bairro>Barra Funda</Bairro>
+        <Cidade>São Paulo</Cidade>
+        <UF>SP</UF>
+        <CEP>01144020</CEP>
+        <Pais>Brasil</Pais>
+    </Endereco>
+    <Telefones>
+        <Telefone>
+            <Tipo>2</Tipo>
+            <DDD>11</DDD>
+            <Numero>37288788</Numero>
+        </Telefone>
+    </Telefones>
+</DadosEntrega>

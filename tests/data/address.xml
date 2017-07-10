@@ -1,0 +1,10 @@
+<Endereco>
+    <Logradouro>Rua José de Oliveira Coutinho</Logradouro>
+    <Complemento>apto. 500</Complemento>
+    <Numero>151</Numero>
+    <Bairro>Barra Funda</Bairro>
+    <Cidade>São Paulo</Cidade>
+    <UF>SP</UF>
+    <CEP>01144020</CEP>
+    <Pais>Brasil</Pais>
+</Endereco>

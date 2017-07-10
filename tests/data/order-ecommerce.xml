@@ -1,0 +1,75 @@
+<ClearID_Input>
+    <SessionID>session-id-1234</SessionID>
+    <Pedido>
+        <PedidoID>TEST-b8e8eb55423b73e2e8e6bf42961aebbb</PedidoID>
+        <Data>2016-04-13T23:39:07</Data>
+        <Email>cliente@clearsale.com.br</Email>
+        <ValorTotalItens>10</ValorTotalItens>
+        <ValorTotalPedido>17.5</ValorTotalPedido>
+        <QtdParcelas>1</QtdParcelas>
+        <IP>127.0.0.1</IP>
+        <Origem>WEB</Origem>
+        <DadosCobranca>
+            <UsuarioID>1</UsuarioID>
+            <TipoUsuario>1</TipoUsuario>
+            <DocumentoLegal1>63165236372</DocumentoLegal1>
+            <Nome>Fulano da Silva</Nome>
+            <Nascimento>1980-01-01T00:00:00</Nascimento>
+            <Endereco>
+                <Logradouro>Rua José de Oliveira Coutinho</Logradouro>
+                <Complemento>apto. 500</Complemento>
+                <Numero>151</Numero>
+                <Bairro>Barra Funda</Bairro>
+                <Cidade>São Paulo</Cidade>
+                <UF>SP</UF>
+                <CEP>01144020</CEP>
+                <Pais>Brasil</Pais>
+            </Endereco>
+            <Telefones>
+                <Telefone>
+                    <Tipo>2</Tipo>
+                    <DDD>11</DDD>
+                    <Numero>37288788</Numero>
+                </Telefone>
+            </Telefones>
+        </DadosCobranca>
+        <DadosEntrega>
+            <UsuarioID>1</UsuarioID>
+            <TipoUsuario>1</TipoUsuario>
+            <DocumentoLegal1>63165236372</DocumentoLegal1>
+            <Nome>Fulano da Silva</Nome>
+            <Endereco>
+                <Logradouro>Rua José de Oliveira Coutinho</Logradouro>
+                <Complemento>apto. 500</Complemento>
+                <Numero>151</Numero>
+                <Bairro>Barra Funda</Bairro>
+                <Cidade>São Paulo</Cidade>
+                <UF>SP</UF>
+                <CEP>01144020</CEP>
+                <Pais>Brasil</Pais>
+            </Endereco>
+            <Telefones>
+                <Telefone>
+                    <Tipo>2</Tipo>
+                    <DDD>11</DDD>
+                    <Numero>37288788</Numero>
+                </Telefone>
+            </Telefones>
+        </DadosEntrega>
+        <Pagamentos>
+            <Pagamento>
+                <Data>2016-04-13T23:39:07</Data>
+                <Valor>17.5</Valor>
+                <TipoPagamentoID>2</TipoPagamentoID>
+            </Pagamento>
+        </Pagamentos>
+        <Itens>
+            <Item>
+                <CodigoItem>1</CodigoItem>
+                <NomeItem>Adaptador USB</NomeItem>
+                <ValorItem>10</ValorItem>
+                <Quantidade>1</Quantidade>
+            </Item>
+        </Itens>
+    </Pedido>
+</ClearID_Input>

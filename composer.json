@@ -1,0 +1,27 @@
+{
+  "name": "rodrigopedra/clearsale-id",
+  "description": "ClearSale ID WebService Integration",
+  "keywords": [
+    "ClearSale",
+    "ClearSale ID"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Rodrigo Pedra Brum",
+      "email": "rodrigo.pedra@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "psr/log": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "RodrigoPedra\\": "src/"
+    }
+  }
+}
