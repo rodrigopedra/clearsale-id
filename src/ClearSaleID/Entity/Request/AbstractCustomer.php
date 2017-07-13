@@ -18,12 +18,12 @@ abstract class AbstractCustomer implements XmlEntityInterface
         self::TYPE_PESSOA_JURIDICA,
     ];
 
-    const GENDER_MASCULINO = 'M';
-    const GENDER_FEMININO  = 'F';
+    const SEX_MASCULINE = 'M';
+    const SEX_FEMININE  = 'F';
 
-    protected static $genderTypes = [
-        self::GENDER_MASCULINO,
-        self::GENDER_FEMININO,
+    protected static $sexTypes = [
+        self::SEX_MASCULINE,
+        self::SEX_FEMININE,
     ];
 
     /** @var  string */
@@ -45,7 +45,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
     protected $email;
 
     /** @var  string */
-    protected $gender;
+    protected $sex;
 
     /** @var  DateTime */
     protected $birthDate;
@@ -221,25 +221,25 @@ abstract class AbstractCustomer implements XmlEntityInterface
      *
      * @return string
      */
-    public function getGender()
+    public function getSex()
     {
-        return $this->gender;
+        return $this->sex;
     }
 
     /**
      *
-     * @param string $gender
+     * @param string $sex
      *
      * @return AbstractCustomer
      * @throws InvalidArgumentException
      */
-    public function setGender( $gender )
+    public function setSex( $sex )
     {
-        if (!in_array( $gender, self::$genderTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid gender (%s)', $gender ) );
+        if (!in_array( $sex, self::$sexTypes )) {
+            throw new InvalidArgumentException( sprintf( 'Invalid sex (%s)', $sex ) );
         }
 
-        $this->gender = $gender;
+        $this->sex = $sex;
 
         return $this;
     }
@@ -361,8 +361,8 @@ abstract class AbstractCustomer implements XmlEntityInterface
             $XMLWriter->writeElement( 'Email', $this->email );
         }
 
-        if ($this->gender) {
-            $XMLWriter->writeElement( 'Sexo', $this->gender );
+        if ($this->sex) {
+            $XMLWriter->writeElement( 'Sexo', $this->sex );
         }
 
         if ($this->birthDate) {
