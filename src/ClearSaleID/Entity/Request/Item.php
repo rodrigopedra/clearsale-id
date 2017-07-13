@@ -173,19 +173,19 @@ class Item implements XmlEntityInterface
         if ($this->name) {
             $XMLWriter->writeElement( 'NomeItem', $this->name );
         } else {
-            throw new RequiredFieldException( 'Field Name of the Payment object is required' );
+            throw new RequiredFieldException( 'Field Name of the Item object is required' );
         }
 
         if ($this->value) {
             $XMLWriter->writeElement( 'ValorItem', $this->value );
         } else {
-            throw new RequiredFieldException( 'Field ItemValue of the Payment object is required' );
+            throw new RequiredFieldException( 'Field ItemValue of the Item object is required' );
         }
 
         if ($this->quantity) {
             $XMLWriter->writeElement( 'Quantidade', $this->quantity );
         } else {
-            throw new RequiredFieldException( 'Field Quantity object is required' );
+            throw new RequiredFieldException( 'Field Quantity of the Item object is required' );
         }
 
         if ($this->notes) {
