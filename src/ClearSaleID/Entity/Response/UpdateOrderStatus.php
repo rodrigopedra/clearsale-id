@@ -4,11 +4,16 @@ namespace RodrigoPedra\ClearSaleID\Entity\Response;
 
 use Exception;
 use RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException;
+use RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException;
 
-class TransactionStatus
+class UpdateOrderStatus
 {
-    private $transactionId;
+    const STATUS_CODE_OK = 'OK';
+
+    /** @var  string */
     private $statusCode;
+
+    /** @var  string */
     private $message;
 
     public function __construct( $xml )
@@ -21,31 +26,24 @@ class TransactionStatus
             $object = simplexml_load_string( $xml );
 
             // Convert SimpleXMLElement to stdClass
-            $transactionStatusObject = json_decode( json_encode( $object ) );
+            $updateOrderStatusObject = json_decode( json_encode( $object ) );
 
-            if (is_null( $transactionStatusObject )) {
+            if (is_null( $updateOrderStatusObject )) {
                 throw new UnexpectedErrorException( sprintf( 'Invalid response from webservice (%s)', $xml ), 0 );
             }
 
-            if (isset( $transactionStatusObject->TransactionID )) {
-                $this->setTransactionId( $transactionStatusObject->TransactionID );
-            }
-
-            $this->setStatusCode( $transactionStatusObject->StatusCode );
-            $this->setMessage( $transactionStatusObject->Message );
+            $this->setStatusCode( $updateOrderStatusObject->StatusCode );
+            $this->setMessage( $updateOrderStatusObject->Message );
         } catch ( Exception $ex ) {
             throw new UnexpectedErrorException( sprintf( 'Invalid response from webservice (%s)', $xml ), 0, $ex );
         }
-    }
 
-    public function getTransactionId()
-    {
-        return $this->transactionId;
+        $this->validateStatusCode();
     }
 
     public function getStatusCode()
     {
-        return intval( $this->statusCode );
+        return $this->statusCode;
     }
 
     public function getMessage()
@@ -53,20 +51,14 @@ class TransactionStatus
         return $this->message;
     }
 
-    private function setTransactionId( $transactionId )
+    public function isSuccessful()
     {
-        $this->transactionId = $transactionId;
-
-        return $this;
+        return $this->getStatusCode() === self::STATUS_CODE_OK;
     }
 
     private function setStatusCode( $statusCode )
     {
-        if (preg_match( '/\d+/', $statusCode ) !== 1) {
-            throw new UnexpectedErrorException( sprintf( 'Invalid Status Code (%s)', $statusCode ) );
-        }
-
-        $this->statusCode = intval( $statusCode );
+        $this->statusCode = $statusCode;
 
         return $this;
     }
@@ -76,5 +68,14 @@ class TransactionStatus
         $this->message = trim( $message );
 
         return $this;
+    }
+
+    private function validateStatusCode()
+    {
+        if ($this->getStatusCode() === self::STATUS_CODE_OK) {
+            return;
+        }
+
+        throw new UpdateOrderStatusException( sprintf( 'Update order status failed (%s)', $this->getStatusCode() ) );
     }
 }

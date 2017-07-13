@@ -5,7 +5,7 @@ namespace RodrigoPedra\ClearSaleID\Service;
 use Exception;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
-use RodrigoPedra\ClearSaleID\Entity\Response\TransactionStatus;
+use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
 
 class Analysis
@@ -15,12 +15,12 @@ class Analysis
     const ORDER_STATUS_NO_ORDER_RETURNED = 'Erro';
     const ORDER_STATUS_INVALID           = 'Erro';
 
-    const NEW_STATUS_CODE_ORDER_APPROVED = 26;
-    const NEW_STATUS_CODE_ORDER_REJECTED = 27;
+    const UPDATE_ORDER_STATUS_ORDER_APPROVED = 26;
+    const UPDATE_ORDER_STATUS_ORDER_REJECTED = 27;
 
-    private static $newStatusCodeList = [
-        self::NEW_STATUS_CODE_ORDER_APPROVED,
-        self::NEW_STATUS_CODE_ORDER_REJECTED,
+    private static $updateOrderStatusList = [
+        self::UPDATE_ORDER_STATUS_ORDER_APPROVED,
+        self::UPDATE_ORDER_STATUS_ORDER_REJECTED,
     ];
 
     /** @var Integration */
@@ -29,8 +29,8 @@ class Analysis
     /** @var  PackageStatus */
     private $packageStatusResponse;
 
-    /** @var  TransactionStatus */
-    private $transactionStatusResponse;
+    /** @var  UpdateOrderStatus */
+    private $updateOrderStatusResponse;
 
     /**
      * Construtor para gerar a integração com a ClearSale
@@ -101,11 +101,11 @@ class Analysis
      */
     public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
     {
-        if (!in_array( $newStatusCode, self::$newStatusCodeList )) {
+        if (!in_array( $newStatusCode, self::$updateOrderStatusList )) {
             throw new InvalidArgumentException( sprintf( 'Invalid new status code (%s)', $newStatusCode ) );
         }
 
-        $this->transactionStatusResponse = $this->integration->updateOrderStatus( $orderId, $newStatusCode, $notes );
+        $this->updateOrderStatusResponse = $this->integration->updateOrderStatus( $orderId, $newStatusCode, $notes );
 
         return true;
     }
@@ -123,10 +123,10 @@ class Analysis
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return TransactionStatus
+     * @return UpdateOrderStatus
      */
-    public function getTransactionStatus()
+    public function getUpdateOrderStatus()
     {
-        return $this->transactionStatusResponse;
+        return $this->updateOrderStatusResponse;
     }
 }

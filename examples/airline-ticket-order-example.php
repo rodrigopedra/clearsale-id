@@ -90,6 +90,10 @@ try {
             // Análise pendente de aprovação manual
             echo 'Erro' . PHP_EOL;
     }
+
+    if ($clearSale->updateOrderStatus( $orderId, Analysis::UPDATE_ORDER_STATUS_ORDER_APPROVED ) === true) {
+        echo 'Status do pedido atualizado';
+    }
 } catch ( Exception $e ) {
     echo 'ERRO', PHP_EOL, PHP_EOL;
 

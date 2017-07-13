@@ -41,9 +41,16 @@ class PackageStatus
         self::STATUS_CODE_INTERNAL_ERROR_7      => UnexpectedErrorException::class,
     ];
 
+    /** @var  string */
     private $transactionId;
+
+    /** @var  int */
     private $statusCode;
+
+    /** @var  string */
     private $message;
+
+    /** @var  Order */
     private $order;
 
     public function __construct( $xml )

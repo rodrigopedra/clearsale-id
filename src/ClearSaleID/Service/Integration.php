@@ -4,7 +4,7 @@ namespace RodrigoPedra\ClearSaleID\Service;
 
 use XMLWriter;
 use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
-use RodrigoPedra\ClearSaleID\Entity\Response\TransactionStatus;
+use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
 
 class Integration
@@ -78,7 +78,7 @@ class Integration
      * @param  int    $newStatusId
      * @param  string $notes
      *
-     * @return TransactionStatus
+     * @return UpdateOrderStatus
      */
     public function updateOrderStatus( $orderId, $newStatusId, $notes = '' )
     {
@@ -93,11 +93,11 @@ class Integration
         // false indicates this method uses extended endpoint
         $response = $this->connector->doRequest( $function, $parameters, false );
 
-        $transactionStatusResponse = new TransactionStatus( $response->UpdateOrderStatusResult );
+        $updateOrderStatusResponse = new UpdateOrderStatus( $response->UpdateOrderStatusResult );
 
-        $this->connector->log( 'Integration@updateOrderStatus', compact( 'transactionStatusResponse' ) );
+        $this->connector->log( 'Integration@updateOrderStatus', compact( 'updateOrderStatusResponse' ) );
 
-        return $transactionStatusResponse;
+        return $updateOrderStatusResponse;
     }
 
     private function createRequestOrderXML( OrderRequest $order )
