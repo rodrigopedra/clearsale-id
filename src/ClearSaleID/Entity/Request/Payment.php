@@ -65,7 +65,7 @@ class Payment implements XmlEntityInterface
 
     public static function create( $type, DateTime $date, $amount )
     {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setType( $type );
         $instance->setDate( $date );

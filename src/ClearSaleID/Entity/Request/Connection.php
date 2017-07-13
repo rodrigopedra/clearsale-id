@@ -43,7 +43,7 @@ class Connection implements XmlEntityInterface
         DateTime $departureDate,
         DateTime $arrivalDate
     ) {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setCompany( $company );
         $instance->setFlightNumber( $flightNumber );

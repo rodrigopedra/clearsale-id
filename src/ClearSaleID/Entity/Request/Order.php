@@ -223,7 +223,7 @@ class Order implements XmlEntityInterface
         Passenger $passenger = null,
         Connection $connection = null
     ) {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setFingerPrint( $fingerPrint );
         $instance->setId( $id );

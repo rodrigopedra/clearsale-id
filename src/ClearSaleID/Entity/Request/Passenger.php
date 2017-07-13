@@ -41,7 +41,7 @@ class Passenger implements XmlEntityInterface
 
     public static function create( $name, $legalDocumentType, $legalDocument )
     {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setName( $name );
         $instance->setLegalDocumentType( $legalDocumentType );

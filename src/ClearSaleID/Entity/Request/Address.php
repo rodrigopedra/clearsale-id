@@ -35,7 +35,7 @@ class Address implements XmlEntityInterface
 
     public static function create( $street, $number, $county, $country, $city, $state, $zipCode, $complement = '' )
     {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setStreet( $street );
         $instance->setNumber( $number );

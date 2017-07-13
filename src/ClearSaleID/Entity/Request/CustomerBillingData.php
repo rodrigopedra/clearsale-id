@@ -28,7 +28,7 @@ class CustomerBillingData extends AbstractCustomer implements XmlEntityInterface
         $phone,
         DateTime $birthDate = null
     ) {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setId( $id );
         $instance->setType( $type );

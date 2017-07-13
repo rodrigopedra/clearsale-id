@@ -29,7 +29,7 @@ class CustomerShippingData extends AbstractCustomer implements XmlEntityInterfac
         $phone,
         DateTime $birthDate = null
     ) {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setId( $id );
         $instance->setType( $type );

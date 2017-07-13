@@ -42,7 +42,7 @@ class Item implements XmlEntityInterface
      */
     public static function create( $id, $name, $value, $quantity )
     {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setId( $id );
         $instance->setName( $name );

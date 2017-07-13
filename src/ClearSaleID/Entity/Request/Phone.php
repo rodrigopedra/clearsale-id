@@ -44,7 +44,7 @@ class Phone implements XmlEntityInterface
 
     public static function create( $type, $ddd, $number )
     {
-        $instance = new self();
+        $instance = new self;
 
         $instance->setType( $type );
         $instance->setDDD( $ddd );
