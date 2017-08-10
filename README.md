@@ -15,7 +15,16 @@ Extensões PHP
 ```
 ext-openssl
 ext-soap
+ext-xml
 ```
+
+No Ubuntu, você pode instalar através do seguinte comando:
+
+```
+sudo apt-get install openssl php-soap php-xml
+```
+
+A extensão `openssl` deve ser habilitada em seu arquivo `php.ini`.
 
 ## Instalação
 
