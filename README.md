@@ -10,6 +10,13 @@ Baseado no repositório [https://github.com/lucasmro/ClearSale](https://github.c
 
 PHP 5.5+
 
+Extensões PHP
+
+```
+ext-openssl
+ext-soap
+```
+
 ## Instalação
 
 A maneira mais fácil de instalar a biblioteca é através do [Composer](http://getcomposer.org/).
@@ -17,7 +24,7 @@ A maneira mais fácil de instalar a biblioteca é através do [Composer](http://
 ```JSON
 {
     "require": {
-        "rodrigopedra/clearsale-id": "^0.1"
+        "rodrigopedra/clearsale-id": "^0.4"
     }
 }
 ```
