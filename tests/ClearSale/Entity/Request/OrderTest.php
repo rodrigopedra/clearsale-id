@@ -3,8 +3,8 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\OrderFixture;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class OrderTest extends TestCase
 {

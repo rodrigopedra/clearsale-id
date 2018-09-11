@@ -3,25 +3,22 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use DateTime;
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 abstract class AbstractCustomer implements XmlEntityInterface
 {
     const TYPE_PESSOA_FISICA   = 1;
     const TYPE_PESSOA_JURIDICA = 2;
-
+    const SEX_MASCULINE        = 'M';
+    const SEX_FEMININE         = 'F';
     protected static $customerTypes = [
         self::TYPE_PESSOA_FISICA,
         self::TYPE_PESSOA_JURIDICA,
     ];
-
-    const SEX_MASCULINE = 'M';
-    const SEX_FEMININE  = 'F';
-
-    protected static $sexTypes = [
+    protected static $sexTypes      = [
         self::SEX_MASCULINE,
         self::SEX_FEMININE,
     ];
@@ -47,17 +44,16 @@ abstract class AbstractCustomer implements XmlEntityInterface
     /** @var  string */
     protected $sex;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     protected $birthDate;
 
-    /** @var  Address */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Address */
     protected $address;
 
-    /** @var  Phone[] */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Phone[] */
     protected $phones;
 
     /**
-     *
      * @return string
      */
     public function getId()
@@ -66,11 +62,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $id
      *
-     * @param string $id
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setId( $id )
     {
@@ -84,7 +79,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getType()
@@ -93,11 +87,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  int $type
      *
-     * @param string $type
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setType( $type )
     {
@@ -111,7 +104,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getLegalDocument1()
@@ -120,11 +112,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $legalDocument1
      *
-     * @param string $legalDocument1
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setLegalDocument1( $legalDocument1 )
     {
@@ -140,7 +131,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getLegalDocument2()
@@ -149,11 +139,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $legalDocument2
      *
-     * @param string $legalDocument2
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setLegalDocument2( $legalDocument2 )
     {
@@ -169,7 +158,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getName()
@@ -178,11 +166,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $name
      *
-     * @param string $name
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setName( $name )
     {
@@ -196,7 +183,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getEmail()
@@ -205,10 +191,9 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $email
      *
-     * @param string $email
-     *
-     * @return AbstractCustomer
+     * @return $this
      */
     public function setEmail( $email )
     {
@@ -218,7 +203,6 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getSex()
@@ -227,11 +211,10 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  string $sex
      *
-     * @param string $sex
-     *
-     * @return AbstractCustomer
-     * @throws InvalidArgumentException
+     * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setSex( $sex )
     {
@@ -244,16 +227,18 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getBirthDate()
     {
         return $this->birthDate;
     }
 
     /**
+     * @param  \DateTime $birthDate
      *
-     * @param DateTime $birthDate
-     *
-     * @return AbstractCustomer
+     * @return $this
      */
     public function setBirthDate( DateTime $birthDate )
     {
@@ -263,8 +248,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return Address
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Address
      */
     public function getAddress()
     {
@@ -272,10 +256,9 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Address $address
      *
-     * @param Address $address
-     *
-     * @return AbstractCustomer
+     * @return $this
      */
     public function setAddress( Address $address )
     {
@@ -285,8 +268,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return Phone[]
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Phone[]
      */
     public function getPhones()
     {
@@ -294,14 +276,15 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone|\RodrigoPedra\ClearSaleID\Entity\Request\Phone[] $phones
      *
-     * @param Phone|Phone[] $phones
-     *
-     * @return AbstractCustomer
+     * @return $this
      */
     public function setPhones( $phones )
     {
-        foreach ((array)$phones as $phone) {
+        $phones = is_array( $phones ) ? $phones : [ $phones ];
+
+        foreach ($phones as $phone) {
             $this->addPhone( $phone );
         }
 
@@ -309,10 +292,9 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone $phone
      *
-     * @param Phone $phone
-     *
-     * @return AbstractCustomer
+     * @return $this
      */
     public function addPhone( Phone $phone )
     {
@@ -322,10 +304,9 @@ abstract class AbstractCustomer implements XmlEntityInterface
     }
 
     /**
+     * @param  \XMLWriter $XMLWriter
      *
-     * @param XMLWriter $XMLWriter
-     *
-     * @throws RequiredFieldException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
      */
     public function toXML( XMLWriter $XMLWriter )
     {

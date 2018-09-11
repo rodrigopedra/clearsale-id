@@ -3,9 +3,9 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use DateTime;
-use XMLWriter;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Connection implements XmlEntityInterface
 {
@@ -15,7 +15,7 @@ class Connection implements XmlEntityInterface
     /** @var  string */
     private $flightNumber;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $flightDate;
 
     /** @var  string */
@@ -27,12 +27,24 @@ class Connection implements XmlEntityInterface
     /** @var  string */
     private $to;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $departureDate;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $arrivalDate;
 
+    /**
+     * @param  string    $company
+     * @param  string    $flightNumber
+     * @param  \DateTime $flightDate
+     * @param  string    $class
+     * @param  string    $from
+     * @param  string    $to
+     * @param  \DateTime $departureDate
+     * @param  \DateTime $arrivalDate
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Connection
+     */
     public static function create(
         $company,
         $flightNumber,
@@ -58,7 +70,6 @@ class Connection implements XmlEntityInterface
     }
 
     /**
-     *
      * @return string
      */
     public function getCompany()
@@ -67,73 +78,9 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @param  string $company
      *
-     * @return string
-     */
-    public function getFlightNumber()
-    {
-        return $this->flightNumber;
-    }
-
-    /**
-     *
-     * @return DateTime
-     */
-    public function getFlightDate()
-    {
-        return $this->flightDate;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getTo()
-    {
-        return $this->to;
-    }
-
-    /**
-     *
-     * @return DateTime
-     */
-    public function getDepartureDate()
-    {
-        return $this->departureDate;
-    }
-
-    /**
-     *
-     * @return DateTime
-     */
-    public function getArrivalDate()
-    {
-        return $this->arrivalDate;
-    }
-
-    /**
-     *
-     * @param string $company
-     *
-     * @return Connection
+     * @return $this
      */
     public function setCompany( $company )
     {
@@ -143,10 +90,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return string
+     */
+    public function getFlightNumber()
+    {
+        return $this->flightNumber;
+    }
+
+    /**
+     * @param  string $flightNumber
      *
-     * @param string $flightNumber
-     *
-     * @return Connection
+     * @return $this
      */
     public function setFlightNumber( $flightNumber )
     {
@@ -156,10 +110,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getFlightDate()
+    {
+        return $this->flightDate;
+    }
+
+    /**
+     * @param  \DateTime $flightDate
      *
-     * @param DateTime $flightDate
-     *
-     * @return Connection
+     * @return $this
      */
     public function setFlightDate( DateTime $flightDate )
     {
@@ -169,10 +130,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param  string $class
      *
-     * @param string $class
-     *
-     * @return Connection
+     * @return $this
      */
     public function setClass( $class )
     {
@@ -182,10 +150,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return string
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    /**
+     * @param  string $from
      *
-     * @param string $from
-     *
-     * @return Connection
+     * @return $this
      */
     public function setFrom( $from )
     {
@@ -195,10 +170,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return string
+     */
+    public function getTo()
+    {
+        return $this->to;
+    }
+
+    /**
+     * @param  string $to
      *
-     * @param string $to
-     *
-     * @return Connection
+     * @return $this
      */
     public function setTo( $to )
     {
@@ -208,10 +190,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getDepartureDate()
+    {
+        return $this->departureDate;
+    }
+
+    /**
+     * @param  \DateTime $departureDate
      *
-     * @param DateTime $departureDate
-     *
-     * @return Connection
+     * @return $this
      */
     public function setDepartureDate( DateTime $departureDate )
     {
@@ -221,10 +210,17 @@ class Connection implements XmlEntityInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getArrivalDate()
+    {
+        return $this->arrivalDate;
+    }
+
+    /**
+     * @param  \DateTime $arrivalDate
      *
-     * @param DateTime $arrivalDate
-     *
-     * @return Connection
+     * @return $this
      */
     public function setArrivalDate( DateTime $arrivalDate )
     {
@@ -233,6 +229,11 @@ class Connection implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Conexao' );

@@ -6,6 +6,12 @@ use Psr\Log\LoggerInterface;
 
 class Production extends AbstractEnvironment
 {
+    /**
+     * Production constructor.
+     *
+     * @param  string                        $entityCode
+     * @param  \Psr\Log\LoggerInterface|null $logger
+     */
     public function __construct( $entityCode, LoggerInterface $logger = null )
     {
         parent::__construct( $entityCode, $logger );

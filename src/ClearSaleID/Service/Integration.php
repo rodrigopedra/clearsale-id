@@ -2,20 +2,20 @@
 
 namespace RodrigoPedra\ClearSaleID\Service;
 
-use XMLWriter;
+use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
 use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
 use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
-use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
+use XMLWriter;
 
 class Integration
 {
-    /** @var Connector */
+    /** @var  \RodrigoPedra\ClearSaleID\Service\Connector */
     protected $connector;
 
     /**
      * Construtor para gerar a integração com a ClearSale
      *
-     * @param Connector $connector
+     * @param  \RodrigoPedra\ClearSaleID\Service\Connector $connector
      */
     public function __construct( Connector $connector )
     {
@@ -25,9 +25,11 @@ class Integration
     /**
      * Método para envio de um pedido
      *
-     * @param OrderRequest $order
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
      *
-     * @return PackageStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
      */
     public function sendOrder( OrderRequest $order )
     {
@@ -48,11 +50,32 @@ class Integration
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
+     *
+     * @return string
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
+    private function createRequestOrderXML( OrderRequest $order )
+    {
+        $xmlWriter = new XMLWriter;
+
+        $xmlWriter->openMemory();
+        $xmlWriter->startDocument( '1.0', 'UTF-8' );
+
+        $order->toXML( $xmlWriter );
+
+        $xmlWriter->endDocument();
+
+        return $xmlWriter->outputMemory( true );
+    }
+
+    /**
      * Retorna o status de um pedido
      *
-     * @param string $orderId
+     * @param  string $orderId
      *
-     * @return PackageStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
      */
     public function checkOrderStatus( $orderId )
     {
@@ -78,7 +101,9 @@ class Integration
      * @param  int    $newStatusId
      * @param  string $notes
      *
-     * @return UpdateOrderStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
      */
     public function updateOrderStatus( $orderId, $newStatusId, $notes = '' )
     {
@@ -98,19 +123,5 @@ class Integration
         $this->connector->log( 'Integration@updateOrderStatus', compact( 'updateOrderStatusResponse' ) );
 
         return $updateOrderStatusResponse;
-    }
-
-    private function createRequestOrderXML( OrderRequest $order )
-    {
-        $xmlWriter = new XMLWriter;
-
-        $xmlWriter->openMemory();
-        $xmlWriter->startDocument( '1.0', 'UTF-8' );
-
-        $order->toXML( $xmlWriter );
-
-        $xmlWriter->endDocument();
-
-        return $xmlWriter->outputMemory( true );
     }
 }

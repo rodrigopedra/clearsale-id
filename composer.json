@@ -14,9 +14,12 @@
   ],
   "require": {
     "php": ">=5.5.0",
+    "ext-json": "*",
     "ext-openssl": "*",
+    "ext-simplexml": "*",
     "ext-soap": "*",
     "ext-xml": "*",
+    "ext-xmlwriter": "*",
     "psr/log": "^1.0"
   },
   "require-dev": {

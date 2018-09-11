@@ -4,8 +4,6 @@ namespace RodrigoPedra\ClearSaleID\Service;
 
 use Exception;
 use InvalidArgumentException;
-use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
-use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
 
 class Analysis
@@ -23,20 +21,19 @@ class Analysis
         self::UPDATE_ORDER_STATUS_ORDER_REJECTED,
     ];
 
-    /** @var Integration */
+    /** @var  \RodrigoPedra\ClearSaleID\Service\Integration */
     private $integration;
 
-    /** @var  PackageStatus */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus */
     private $packageStatusResponse;
 
-    /** @var  UpdateOrderStatus */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus */
     private $updateOrderStatusResponse;
 
     /**
      * Construtor para gerar a integração com a ClearSale
      *
-     * @param  Integration $integration
-     *
+     * @param  \RodrigoPedra\ClearSaleID\Service\Integration $integration
      */
     public function __construct( Integration $integration )
     {
@@ -46,10 +43,10 @@ class Analysis
     /**
      * Método para envio de pedidos e retorno do status
      *
-     * @param  OrderRequest $order
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     public function analysis( OrderRequest $order )
     {
@@ -68,6 +65,7 @@ class Analysis
      * @param  string $orderId
      *
      * @return string
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
      */
     public function checkOrderStatus( $orderId )
     {
@@ -98,6 +96,8 @@ class Analysis
      * @param  string $notes
      *
      * @return boolean
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
      */
     public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
     {
@@ -113,7 +113,7 @@ class Analysis
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return PackageStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
      */
     public function getPackageStatus()
     {
@@ -123,7 +123,7 @@ class Analysis
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return UpdateOrderStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus
      */
     public function getUpdateOrderStatus()
     {

@@ -3,10 +3,10 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use DateTime;
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Payment implements XmlEntityInterface
 {
@@ -48,7 +48,7 @@ class Payment implements XmlEntityInterface
     /** @var  int */
     private $sequential;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $date;
 
     /** @var  float */
@@ -57,12 +57,19 @@ class Payment implements XmlEntityInterface
     /** @var  int */
     private $quantityInstallments;
 
-    /** @var  Card */
+    /** @var \RodrigoPedra\ClearSaleID\Entity\Request\ Card */
     private $card;
 
     /** @var  string */
     private $legalDocument;
 
+    /**
+     * @param  int       $type
+     * @param  \DateTime $date
+     * @param  float     $amount
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment
+     */
     public static function create( $type, DateTime $date, $amount )
     {
         $instance = new self;
@@ -74,11 +81,19 @@ class Payment implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return int
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param  int $type
+     *
+     * @return $this
+     */
     public function setType( $type )
     {
         if (!array_key_exists( intval( $type ), self::$paymentTypes )) {
@@ -90,33 +105,33 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getSequential()
     {
         return $this->sequential;
     }
 
+    /**
+     * @param  int $sequential
+     *
+     * @return $this
+     */
     public function setSequential( $sequential )
     {
-        if (preg_match( '/^\d+$/', $sequential ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Sequential number should be a positive integer (%s)',
-                $sequential ) );
-        }
-
-        $sequential = intval( $sequential );
-
-        if ($sequential < 1 || $sequential > 9) {
+        if (preg_match( '/^[1-9]$/', $sequential ) !== 1) {
             throw new InvalidArgumentException( sprintf( 'Sequential number should be between 1 and 9 (%s)',
                 $sequential ) );
         }
 
-        $this->sequential = $sequential;
+        $this->sequential = intval( $sequential );
 
         return $this;
     }
 
     /**
-     *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -124,10 +139,9 @@ class Payment implements XmlEntityInterface
     }
 
     /**
+     * @param  \DateTime $date
      *
-     * @param DateTime $date
-     *
-     * @return Payment
+     * @return $this
      */
     public function setDate( DateTime $date )
     {
@@ -136,15 +150,23 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * @param  float $amount
+     *
+     * @return $this
+     */
     public function setAmount( $amount )
     {
         if (preg_match( '/^(?:\d*\.)?\d+$/', $amount ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Amount should be a positive number (%s)', $amount ) );
+            throw new InvalidArgumentException( sprintf( 'Amount should be a non-negative number (%s)', $amount ) );
         }
 
         $this->amount = (float)number_format( $amount, 4, '.', '' );
@@ -152,11 +174,19 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getQtyInstallments()
     {
         return $this->quantityInstallments;
     }
 
+    /**
+     * @param  int $quantityInstallments
+     *
+     * @return $this
+     */
     public function setQtyInstallments( $quantityInstallments )
     {
         if (preg_match( '/^\d+$/', $quantityInstallments ) !== 1) {
@@ -177,8 +207,7 @@ class Payment implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return Card
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Card
      */
     public function getCard()
     {
@@ -186,10 +215,9 @@ class Payment implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Card $card
      *
-     * @param Card $card
-     *
-     * @return Payment
+     * @return $this
      */
     public function setCard( Card $card )
     {
@@ -198,11 +226,19 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getLegalDocument()
     {
         return $this->legalDocument;
     }
 
+    /**
+     * @param  string $legalDocument
+     *
+     * @return $this
+     */
     public function setLegalDocument( $legalDocument )
     {
         $this->legalDocument = $legalDocument;
@@ -210,6 +246,11 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Pagamento' );
@@ -224,7 +265,7 @@ class Payment implements XmlEntityInterface
             throw new RequiredFieldException( 'Field Date of the Payment object is required' );
         }
 
-        if ($this->amount) {
+        if (is_numeric( $this->amount ) && $this->amount >= 0.0) {
             $XMLWriter->writeElement( 'Valor', $this->amount );
         } else {
             throw new RequiredFieldException( 'Field Amount of the Payment object is required' );

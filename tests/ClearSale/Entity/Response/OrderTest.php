@@ -16,7 +16,7 @@ class OrderTest extends TestCase
         $this->responseOrder = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testOrderResponseIdAndScore()
     {
         $id    = '123';

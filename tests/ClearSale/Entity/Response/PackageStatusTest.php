@@ -19,7 +19,10 @@ class PackageStatusTest extends TestCase
         $this->orderResponse         = null;
     }
 
-    /** @test */
+    /**
+     * @test
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     */
     public function testCreateFromXML()
     {
         $responseXmlFile = __DIR__ . '/../../../data/package-status.xml';
@@ -32,7 +35,10 @@ class PackageStatusTest extends TestCase
         $this->assertSame( 'OK', $this->packageStatusResponse->getMessage() );
     }
 
-    /** @test */
+    /**
+     * @test
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     */
     public function testOrderResponse()
     {
         $responseXmlFile = __DIR__ . '/../../../data/package-status.xml';

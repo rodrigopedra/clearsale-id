@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Item implements XmlEntityInterface
 {
@@ -33,12 +33,12 @@ class Item implements XmlEntityInterface
     /**
      * Criar Item com campos obrigatórios preenchidos
      *
-     * @param string  $id       - Código do Produto
-     * @param string  $name     - Nome do Produto
-     * @param float   $value    - Valor Unitário
-     * @param integer $quantity - Quantidade
+     * @param  string  $id       Código do Produto
+     * @param  string  $name     Nome do Produto
+     * @param  float   $value    Valor Unitário
+     * @param  integer $quantity Quantidade
      *
-     * @return Item
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Item
      */
     public static function create( $id, $name, $value, $quantity )
     {
@@ -52,11 +52,19 @@ class Item implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param  string $id
+     *
+     * @return $this
+     */
     public function setId( $id )
     {
         if (empty( $id )) {
@@ -68,11 +76,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param  string $name
+     *
+     * @return $this
+     */
     public function setName( $name )
     {
         if (empty( $name )) {
@@ -84,11 +100,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * @param  string $value
+     *
+     * @return $this
+     */
     public function setValue( $value )
     {
         if (!is_float( $value )) {
@@ -100,11 +124,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getQuantity()
     {
         return $this->quantity;
     }
 
+    /**
+     * @param  string $quantity
+     *
+     * @return $this
+     */
     public function setQuantity( $quantity )
     {
         if (!is_int( $quantity )) {
@@ -116,11 +148,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getNotes()
     {
         return $this->notes;
     }
 
+    /**
+     * @param  string $notes
+     *
+     * @return $this
+     */
     public function setNotes( $notes )
     {
         $this->notes = $notes;
@@ -128,11 +168,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCategoryId()
     {
         return $this->categoryId;
     }
 
+    /**
+     * @param  string $categoryId
+     *
+     * @return $this
+     */
     public function setCategoryId( $categoryId )
     {
         if (!is_int( $categoryId )) {
@@ -144,11 +192,19 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCategoryName()
     {
         return $this->categoryName;
     }
 
+    /**
+     * @param  string $categoryName
+     *
+     * @return $this
+     */
     public function setCategoryName( $categoryName )
     {
         if (empty( $categoryName )) {
@@ -160,6 +216,11 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Item' );

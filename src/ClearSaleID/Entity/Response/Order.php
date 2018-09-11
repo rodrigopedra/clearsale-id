@@ -20,6 +20,14 @@ class Order
     /** @var  string */
     private $quizURL;
 
+    /**
+     * Order constructor.
+     *
+     * @param  int    $id
+     * @param  string $score
+     * @param  string $status
+     * @param  string $quizURL
+     */
     public function __construct( $id, $score, $status, $quizURL = '' )
     {
         $this->id     = $id;
@@ -28,48 +36,9 @@ class Order
         $this->setQuizURL( $quizURL );
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getScore()
-    {
-        return floatval( $this->score );
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function getQuizURL()
-    {
-        return $this->quizURL;
-    }
-
-    public function isApproved()
-    {
-        return in_array( $this->getStatus(), [ self::STATUS_APPROVED_AUTOMATICALLY ] );
-    }
-
-    public function isRejected()
-    {
-        return in_array( $this->getStatus(), [
-            self::STATUS_REJECTED_BY_POLITICS,
-            self::STATUS_REJECTED_AUTOMATICALLY,
-        ] );
-    }
-
-    public function hasValidStatus()
-    {
-        return in_array( $this->getStatus(), [
-            self::STATUS_APPROVED_AUTOMATICALLY,
-            self::STATUS_REJECTED_BY_POLITICS,
-            self::STATUS_REJECTED_AUTOMATICALLY,
-        ] );
-    }
-
+    /**
+     * @param  string $value
+     */
     private function setQuizURL( $value )
     {
         $value = (array)$value;
@@ -81,5 +50,68 @@ class Order
         }
 
         $this->quizURL = trim( $value[ 0 ] );
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return float
+     */
+    public function getScore()
+    {
+        return floatval( $this->score );
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuizURL()
+    {
+        return $this->quizURL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return in_array( $this->getStatus(), [ self::STATUS_APPROVED_AUTOMATICALLY ] );
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRejected()
+    {
+        return in_array( $this->getStatus(), [
+            self::STATUS_REJECTED_BY_POLITICS,
+            self::STATUS_REJECTED_AUTOMATICALLY,
+        ] );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasValidStatus()
+    {
+        return in_array( $this->getStatus(), [
+            self::STATUS_APPROVED_AUTOMATICALLY,
+            self::STATUS_REJECTED_BY_POLITICS,
+            self::STATUS_REJECTED_AUTOMATICALLY,
+        ] );
     }
 }

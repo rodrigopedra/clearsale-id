@@ -3,8 +3,8 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\AddressFixture;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class AddressTest extends TestCase
 {
@@ -23,7 +23,7 @@ class AddressTest extends TestCase
         $this->address = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testAddress()
     {
         $this->assertSame( 'Rua José de Oliveira Coutinho', $this->address->getStreet() );
@@ -36,7 +36,7 @@ class AddressTest extends TestCase
         $this->assertSame( '01144020', $this->address->getZipCode() );
     }
 
-    /** @test  */
+    /** @test */
     public function testAddressToXml()
     {
         $outputXML       = $this->generateXML( $this->address );

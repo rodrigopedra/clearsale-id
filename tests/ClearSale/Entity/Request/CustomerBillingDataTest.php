@@ -4,11 +4,11 @@ namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
-use RodrigoPedra\ClearSaleID\Entity\Request\Address;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\AbstractCustomer;
+use RodrigoPedra\ClearSaleID\Entity\Request\Address;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\CustomerBillingFixture;
+use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class CustomerBillingDataTest extends TestCase
 {
@@ -27,7 +27,7 @@ class CustomerBillingDataTest extends TestCase
         $this->customer = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testCustomerBillingData()
     {
         $phones = $this->customer->getPhones();
@@ -41,7 +41,7 @@ class CustomerBillingDataTest extends TestCase
         $this->assertInstanceOf( DateTime::class, $this->customer->getBirthDate() );
     }
 
-    /** @test  */
+    /** @test */
     public function testCustomerBillingDataToXml()
     {
         $outputXML       = $this->generateXML( $this->customer );

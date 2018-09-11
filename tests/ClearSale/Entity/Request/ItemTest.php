@@ -3,8 +3,8 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\ItemFixture;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class ItemTest extends TestCase
 {
@@ -23,7 +23,7 @@ class ItemTest extends TestCase
         $this->item = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testItem()
     {
         $this->assertSame( 1, $this->item->getId() );
@@ -32,7 +32,7 @@ class ItemTest extends TestCase
         $this->assertSame( 1, $this->item->getQuantity() );
     }
 
-    /** @test  */
+    /** @test */
     public function testItemToXml()
     {
         $outputXML       = $this->generateXML( $this->item );

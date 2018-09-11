@@ -3,9 +3,9 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
+use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\PhoneFixture;
 use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
-use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\PhoneFixture;
 
 class PhoneTest extends TestCase
 {
@@ -24,7 +24,7 @@ class PhoneTest extends TestCase
         $this->phone = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testPhone()
     {
         $this->assertSame( Phone::COMERCIAL, $this->phone->getType() );
@@ -32,7 +32,7 @@ class PhoneTest extends TestCase
         $this->assertSame( '37288788', $this->phone->getNumber() );
     }
 
-    /** @test  */
+    /** @test */
     public function testPhoneToXml()
     {
         $outputXML       = $this->generateXML( $this->phone );

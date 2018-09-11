@@ -3,25 +3,24 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use DateTime;
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Order implements XmlEntityInterface
 {
-    const ECOMMERCE_B2B = 'b2b';
-    const ECOMMERCE_B2C = 'b2c';
+    const ECOMMERCE_B2B    = 'b2b';
+    const ECOMMERCE_B2C    = 'b2c';
+    const STATUS_NEW       = 0;
+    const STATUS_APPROVED  = 9;
+    const STATUS_CANCELLED = 41;
+    const STATUS_REJECTED  = 45;
 
     private static $ecommerceTypes = [
         self::ECOMMERCE_B2B,
         self::ECOMMERCE_B2C,
     ];
-
-    const STATUS_NEW       = 0;
-    const STATUS_APPROVED  = 9;
-    const STATUS_CANCELLED = 41;
-    const STATUS_REJECTED  = 45;
 
     private static $statuses = [
         self::STATUS_NEW,
@@ -30,13 +29,13 @@ class Order implements XmlEntityInterface
         self::STATUS_REJECTED,
     ];
 
-    /** @var  FingerPrint */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint */
     private $fingerPrint;
 
     /** @var  string */
     private $id;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $date;
 
     /** @var  string */
@@ -81,43 +80,43 @@ class Order implements XmlEntityInterface
     /** @var  string */
     private $origin;
 
-    /** @var  DateTime */
+    /** @var  \DateTime */
     private $reservationDate;
 
-    /** @var  CustomerBillingData */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData */
     private $customerBillingData;
 
-    /** @var  CustomerShippingData */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData */
     private $customerShippingData;
 
-    /** @var  Payment[] */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Payment[] */
     private $payments;
 
-    /** @var  Item[] */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Item[] */
     private $items;
 
-    /** @var  Passenger[] */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[] */
     private $passengers;
 
-    /** @var  Connection[] */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Connection[] */
     private $connections;
 
     /**
-     * @param FingerPrint          $fingerPrint
-     * @param int                  $id
-     * @param DateTime             $date
-     * @param string               $email
-     * @param float                $totalItems
-     * @param float                $totalOrder
-     * @param int                  $quantityInstallments
-     * @param string               $ip
-     * @param string               $origin
-     * @param CustomerBillingData  $customerBillingData
-     * @param CustomerShippingData $customerShippingData
-     * @param Payment              $payment
-     * @param Item                 $item
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
+     * @param  int                                                           $id
+     * @param  \DateTime                                                     $date
+     * @param  string                                                        $email
+     * @param  float                                                         $totalItems
+     * @param  float                                                         $totalOrder
+     * @param  int                                                           $quantityInstallments
+     * @param  string                                                        $ip
+     * @param  string                                                        $origin
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
      *
-     * @return Order
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
      */
     public static function createEcommerceOrder(
         FingerPrint $fingerPrint,
@@ -152,23 +151,23 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     * @param FingerPrint          $fingerPrint
-     * @param int                  $id
-     * @param DateTime             $date
-     * @param string               $email
-     * @param float                $totalItems
-     * @param float                $totalOrder
-     * @param int                  $quantityInstallments
-     * @param string               $ip
-     * @param string               $origin
-     * @param CustomerBillingData  $customerBillingData
-     * @param CustomerShippingData $customerShippingData
-     * @param Payment              $payment
-     * @param Item                 $item
-     * @param Passenger            $passenger
-     * @param Connection           $connection
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
+     * @param  int                                                           $id
+     * @param  \DateTime                                                     $date
+     * @param  string                                                        $email
+     * @param  float                                                         $totalItems
+     * @param  float                                                         $totalOrder
+     * @param  int                                                           $quantityInstallments
+     * @param  string                                                        $ip
+     * @param  string                                                        $origin
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger            $passenger
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection           $connection
      *
-     * @return Order
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
      */
     public static function createAirlineTicketOrder(
         FingerPrint $fingerPrint,
@@ -206,6 +205,25 @@ class Order implements XmlEntityInterface
         );
     }
 
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
+     * @param  int                                                           $id
+     * @param  \DateTime                                                     $date
+     * @param  string                                                        $email
+     * @param  float                                                         $totalItems
+     * @param  float                                                         $totalOrder
+     * @param  int                                                           $quantityInstallments
+     * @param  string                                                        $ip
+     * @param  string                                                        $origin
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $shippingData
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger|null       $passenger
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection|null      $connection
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
+     */
     private static function create(
         FingerPrint $fingerPrint,
         $id,
@@ -250,11 +268,19 @@ class Order implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint
+     */
     public function getFingerPrint()
     {
         return $this->fingerPrint;
     }
 
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint $fingerPrint
+     *
+     * @return $this
+     */
     public function setFingerPrint( FingerPrint $fingerPrint )
     {
         $this->fingerPrint = $fingerPrint;
@@ -262,11 +288,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param  int $id
+     *
+     * @return $this
+     */
     public function setId( $id )
     {
         $this->id = $id;
@@ -275,8 +309,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -284,10 +317,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \DateTime $date
      *
-     * @param DateTime $date
-     *
-     * @return Order
+     * @return $this
      */
     public function setDate( DateTime $date )
     {
@@ -296,11 +328,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * @param  string $email
+     *
+     * @return $this
+     */
     public function setEmail( $email )
     {
         $this->email = $email;
@@ -308,11 +348,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getChannel()
     {
         return $this->channel;
     }
 
+    /**
+     * @param  string $channel
+     *
+     * @return $this
+     */
     public function setChannel( $channel )
     {
         $this->channel = $channel;
@@ -320,11 +368,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getEcommerceType()
     {
         return $this->ecommerceType;
     }
 
+    /**
+     * @param  string $ecommerceType
+     *
+     * @return $this
+     */
     public function setEcommerceType( $ecommerceType )
     {
         if (!in_array( $ecommerceType, self::$ecommerceTypes )) {
@@ -336,15 +392,23 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getShippingValue()
     {
         return $this->shippingValue;
     }
 
+    /**
+     * @param  float $shippingValue
+     *
+     * @return $this
+     */
     public function setShippingValue( $shippingValue )
     {
         if (preg_match( '/^(?:\d*\.)?\d+$/', $shippingValue ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Shipping value should be a positive number (%s)',
+            throw new InvalidArgumentException( sprintf( 'Shipping value should be a non-negative number (%s)',
                 $shippingValue ) );
         }
 
@@ -353,15 +417,23 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getTotalItems()
     {
         return $this->totalItems;
     }
 
+    /**
+     * @param  float $totalItems
+     *
+     * @return $this
+     */
     public function setTotalItems( $totalItems )
     {
         if (preg_match( '/^(?:\d*\.)?\d+$/', $totalItems ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Items total value should be a positive number (%s)',
+            throw new InvalidArgumentException( sprintf( 'Items total value should be a non-negative number (%s)',
                 $totalItems ) );
         }
 
@@ -370,15 +442,23 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getTotalOrder()
     {
         return $this->totalOrder;
     }
 
+    /**
+     * @param  float $totalOrder
+     *
+     * @return $this
+     */
     public function setTotalOrder( $totalOrder )
     {
         if (preg_match( '/^(?:\d*\.)?\d+$/', $totalOrder ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Order total value should be a positive number (%s)',
+            throw new InvalidArgumentException( sprintf( 'Order total value should be a non-negative number (%s)',
                 $totalOrder ) );
         }
 
@@ -387,11 +467,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getQuantityInstallments()
     {
         return $this->quantityInstallments;
     }
 
+    /**
+     * @param  int $quantityInstallments
+     *
+     * @return $this
+     */
     public function setQuantityInstallments( $quantityInstallments )
     {
         if (preg_match( '/^\d+$/', $quantityInstallments ) !== 1) {
@@ -411,11 +499,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDeliveryTime()
     {
         return $this->deliveryTime;
     }
 
+    /**
+     * @param  string $deliveryTime
+     *
+     * @return $this
+     */
     public function setDeliveryTime( $deliveryTime )
     {
         $this->deliveryTime = $deliveryTime;
@@ -423,15 +519,23 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getQuantityItems()
     {
         return $this->quantityItems;
     }
 
+    /**
+     * @param  int $quantityItems
+     *
+     * @return $this
+     */
     public function setQuantityItems( $quantityItems )
     {
         if (preg_match( '/^\d+$/', $quantityItems ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Items quantity should be a positive integer (%s)',
+            throw new InvalidArgumentException( sprintf( 'Items quantity should be a non-negative integer (%s)',
                 $quantityItems ) );
         }
 
@@ -440,15 +544,23 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getQuantityPaymentTypes()
     {
         return $this->quantityPaymentTypes;
     }
 
+    /**
+     * @param  int $quantityPaymentTypes
+     *
+     * @return $this
+     */
     public function setQuantityPaymentTypes( $quantityPaymentTypes )
     {
         if (preg_match( '/^\d+$/', $quantityPaymentTypes ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Payment types quantity should be a positive integer (%s)',
+            throw new InvalidArgumentException( sprintf( 'Payment types quantity should be a non-negative integer (%s)',
                 $quantityPaymentTypes ) );
         }
 
@@ -457,11 +569,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getIp()
     {
         return $this->ip;
     }
 
+    /**
+     * @param  string $ip
+     *
+     * @return $this
+     */
     public function setIp( $ip )
     {
         $this->ip = $ip;
@@ -469,11 +589,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getNotes()
     {
         return $this->notes;
     }
 
+    /**
+     * @param  string $notes
+     *
+     * @return $this
+     */
     public function setNotes( $notes )
     {
         $this->notes = $notes;
@@ -481,11 +609,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getStatus()
     {
         return $this->status;
     }
 
+    /**
+     * @param  int $status
+     *
+     * @return $this
+     */
     public function setStatus( $status )
     {
         if (!in_array( intval( $status ), self::$statuses )) {
@@ -497,11 +633,19 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getOrigin()
     {
         return $this->origin;
     }
 
+    /**
+     * @param  string $origin
+     *
+     * @return $this
+     */
     public function setOrigin( $origin )
     {
         $this->origin = $origin;
@@ -510,8 +654,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getReservationDate()
     {
@@ -519,10 +662,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \DateTime $reservationDate
      *
-     * @param DateTime $reservationDate
-     *
-     * @return Order
+     * @return $this
      */
     public function setReservationDate( DateTime $reservationDate )
     {
@@ -532,8 +674,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return CustomerBillingData
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData
      */
     public function getBillingData()
     {
@@ -541,10 +682,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData $customerBillingData
      *
-     * @param CustomerBillingData $customerBillingData
-     *
-     * @return Order
+     * @return $this
      */
     public function setBillingData( CustomerBillingData $customerBillingData )
     {
@@ -554,8 +694,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return CustomerShippingData
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData
      */
     public function getShippingData()
     {
@@ -563,10 +702,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
      *
-     * @param CustomerShippingData $customerShippingData
-     *
-     * @return Order
+     * @return $this
      */
     public function setShippingData( CustomerShippingData $customerShippingData )
     {
@@ -576,8 +714,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @return Payment[]
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment[]
      */
     public function getPayments()
     {
@@ -585,21 +722,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment[] $payments
      *
-     * @param int $index
-     *
-     * @return Payment
-     */
-    public function getPayment( $index )
-    {
-        return $this->payments[ $index ];
-    }
-
-    /**
-     *
-     * @param Payment[] $payments
-     *
-     * @return Order
+     * @return $this
      */
     public function setPayments( $payments )
     {
@@ -611,21 +736,17 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  int $index
      *
-     * @param Payment $payment
-     *
-     * @return Order
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment
      */
-    public function addPayment( Payment $payment )
+    public function getPayment( $index )
     {
-        $this->payments[] = $payment;
-
-        return $this;
+        return $this->payments[ $index ];
     }
 
     /**
-     *
-     * @return Item[]
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Item[]
      */
     public function getItems()
     {
@@ -633,10 +754,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item[] $items
      *
-     * @param Item[] $items
-     *
-     * @return Order
+     * @return $this
      */
     public function setItems( $items )
     {
@@ -648,21 +768,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @param Item $item
-     *
-     * @return Order
-     */
-    public function addItem( Item $item )
-    {
-        $this->items[] = $item;
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return Passenger[]
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[]
      */
     public function getPassengers()
     {
@@ -670,10 +776,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[] $passengers
      *
-     * @param Passenger[] $passengers
-     *
-     * @return Order
+     * @return $this
      */
     public function setPassengers( $passengers )
     {
@@ -685,21 +790,7 @@ class Order implements XmlEntityInterface
     }
 
     /**
-     *
-     * @param Passenger $passenger
-     *
-     * @return Order
-     */
-    public function addPassenger( Passenger $passenger )
-    {
-        $this->passengers[] = $passenger;
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return Connection[]
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Connection[]
      */
     public function getConnections()
     {
@@ -707,10 +798,9 @@ class Order implements XmlEntityInterface
     }
 
     /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection[] $connections
      *
-     * @param Connection[] $connections
-     *
-     * @return Order
+     * @return $this
      */
     public function setConnections( $connections )
     {
@@ -721,6 +811,47 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment $payment
+     *
+     * @return $this
+     */
+    public function addPayment( Payment $payment )
+    {
+        $this->payments[] = $payment;
+
+        return $this;
+    }
+
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item $item
+     *
+     * @return $this
+     */
+    public function addItem( Item $item )
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger $passenger
+     *
+     * @return $this
+     */
+    public function addPassenger( Passenger $passenger )
+    {
+        $this->passengers[] = $passenger;
+
+        return $this;
+    }
+
+    /**
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection $connection
+     *
+     * @return $this
+     */
     public function addConnection( Connection $connection )
     {
         $this->connections[] = $connection;
@@ -728,6 +859,11 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'ClearID_Input' );
@@ -768,13 +904,13 @@ class Order implements XmlEntityInterface
             $XMLWriter->writeElement( 'ValorFrete', $this->shippingValue );
         }
 
-        if ($this->totalItems) {
+        if (is_numeric( $this->totalItems )) {
             $XMLWriter->writeElement( 'ValorTotalItens', $this->totalItems );
         } else {
             throw new RequiredFieldException( 'Field TotalItems of the Order object is required' );
         }
 
-        if ($this->totalOrder) {
+        if (is_numeric( $this->totalOrder )) {
             $XMLWriter->writeElement( 'ValorTotalPedido', $this->totalOrder );
         } else {
             throw new RequiredFieldException( 'Field TotalOrder of the Order object is required' );

@@ -3,21 +3,21 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use DateTime;
-use XMLWriter;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
+use XMLWriter;
 
 class CustomerBillingData extends AbstractCustomer implements XmlEntityInterface
 {
     /**
-     * @param string   $id
-     * @param string   $type
-     * @param string   $legalDocument
-     * @param string   $name
-     * @param Address  $address
-     * @param Phone    $phone
-     * @param DateTime $birthDate
+     * @param  string                                           $id
+     * @param  string                                           $type
+     * @param  string                                           $legalDocument
+     * @param  string                                           $name
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Address $address
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone   $phone
+     * @param  \DateTime                                        $birthDate
      *
-     * @return CustomerBillingData
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData
      */
     public static function create(
         $id,
@@ -44,6 +44,11 @@ class CustomerBillingData extends AbstractCustomer implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'DadosCobranca' );

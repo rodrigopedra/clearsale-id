@@ -3,8 +3,8 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\FingerPrintFixture;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class FingerPrintTest extends TestCase
 {
@@ -23,13 +23,13 @@ class FingerPrintTest extends TestCase
         $this->fingerPrint = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testFingerPrint()
     {
         $this->assertSame( 'session-id-1234', $this->fingerPrint->getSessionId() );
     }
 
-    /** @test  */
+    /** @test */
     public function testFingerPrintToXml()
     {
         $outputXML       = $this->generateXML( $this->fingerPrint );

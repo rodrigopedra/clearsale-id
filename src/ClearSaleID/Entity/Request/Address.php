@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Address implements XmlEntityInterface
 {
@@ -33,6 +33,18 @@ class Address implements XmlEntityInterface
     /** @var  string */
     private $zipCode;
 
+    /**
+     * @param  string $street
+     * @param  string $number
+     * @param  string $county
+     * @param  string $country
+     * @param  string $city
+     * @param  string $state
+     * @param  string $zipCode
+     * @param  string $complement
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Address
+     */
     public static function create( $street, $number, $county, $country, $city, $state, $zipCode, $complement = '' )
     {
         $instance = new self;
@@ -52,11 +64,19 @@ class Address implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function getStreet()
     {
         return $this->street;
     }
 
+    /**
+     * @param  string $street
+     *
+     * @return $this
+     */
     public function setStreet( $street )
     {
         if (empty( $street )) {
@@ -68,11 +88,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getNumber()
     {
         return $this->number;
     }
 
+    /**
+     * @param  string $number
+     *
+     * @return $this
+     */
     public function setNumber( $number )
     {
         if (empty( $number )) {
@@ -84,11 +112,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getComplement()
     {
         return $this->complement;
     }
 
+    /**
+     * @param  string $complement
+     *
+     * @return $this
+     */
     public function setComplement( $complement )
     {
         $this->complement = $complement;
@@ -96,11 +132,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCounty()
     {
         return $this->county;
     }
 
+    /**
+     * @param  string $county
+     *
+     * @return $this
+     */
     public function setCounty( $county )
     {
         if (empty( $county )) {
@@ -112,11 +156,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCity()
     {
         return $this->city;
     }
 
+    /**
+     * @param  string $city
+     *
+     * @return $this
+     */
     public function setCity( $city )
     {
         if (empty( $city )) {
@@ -128,11 +180,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getState()
     {
         return $this->state;
     }
 
+    /**
+     * @param  string $state
+     *
+     * @return $this
+     */
     public function setState( $state )
     {
         if (empty( $state )) {
@@ -144,11 +204,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCountry()
     {
         return $this->country;
     }
 
+    /**
+     * @param  string $country
+     *
+     * @return $this
+     */
     public function setCountry( $country )
     {
         $this->country = $country;
@@ -156,11 +224,19 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getZipCode()
     {
         return $this->zipCode;
     }
 
+    /**
+     * @param  string $zipCode
+     *
+     * @return $this
+     */
     public function setZipCode( $zipCode )
     {
         $zipCode = preg_replace( '/\D/', '', $zipCode );
@@ -174,6 +250,11 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Endereco' );

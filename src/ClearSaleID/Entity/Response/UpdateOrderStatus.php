@@ -16,6 +16,14 @@ class UpdateOrderStatus
     /** @var  string */
     private $message;
 
+    /**
+     * UpdateOrderStatus constructor.
+     *
+     * @param  string $xml
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
+     */
     public function __construct( $xml )
     {
         try {
@@ -41,21 +49,11 @@ class UpdateOrderStatus
         $this->validateStatusCode();
     }
 
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    public function isSuccessful()
-    {
-        return $this->getStatusCode() === self::STATUS_CODE_OK;
-    }
-
+    /**
+     * @param  int $statusCode
+     *
+     * @return $this
+     */
     private function setStatusCode( $statusCode )
     {
         $this->statusCode = $statusCode;
@@ -63,6 +61,11 @@ class UpdateOrderStatus
         return $this;
     }
 
+    /**
+     * @param  string $message
+     *
+     * @return $this
+     */
     private function setMessage( $message )
     {
         $this->message = trim( $message );
@@ -70,6 +73,9 @@ class UpdateOrderStatus
         return $this;
     }
 
+    /**
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
+     */
     private function validateStatusCode()
     {
         if ($this->getStatusCode() === self::STATUS_CODE_OK) {
@@ -77,5 +83,29 @@ class UpdateOrderStatus
         }
 
         throw new UpdateOrderStatusException( sprintf( 'Update order status failed (%s)', $this->getStatusCode() ) );
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccessful()
+    {
+        return $this->getStatusCode() === self::STATUS_CODE_OK;
     }
 }

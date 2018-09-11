@@ -4,9 +4,9 @@ namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\PaymentFixture;
 use RodrigoPedra\ClearSaleID\Entity\Request\Payment;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
-use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\PaymentFixture;
 
 class PaymentTest extends TestCase
 {
@@ -25,7 +25,7 @@ class PaymentTest extends TestCase
         $this->payment = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testPayment()
     {
         $this->assertInstanceOf( DateTime::class, $this->payment->getDate() );
@@ -33,7 +33,7 @@ class PaymentTest extends TestCase
         $this->assertSame( Payment::BOLETO_BANCARIO, $this->payment->getType() );
     }
 
-    /** @test  */
+    /** @test */
     public function testPaymentToXml()
     {
         $outputXML       = $this->generateXML( $this->payment );

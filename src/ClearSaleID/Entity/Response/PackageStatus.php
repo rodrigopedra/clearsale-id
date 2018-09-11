@@ -3,11 +3,11 @@
 namespace RodrigoPedra\ClearSaleID\Entity\Response;
 
 use Exception;
+use RodrigoPedra\ClearSaleID\Exception\EntityCodeNotFoundException;
+use RodrigoPedra\ClearSaleID\Exception\OrderAlreadySentException;
+use RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException;
 use RodrigoPedra\ClearSaleID\Exception\XmlTransformException;
 use RodrigoPedra\ClearSaleID\Exception\XmlValidationException;
-use RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException;
-use RodrigoPedra\ClearSaleID\Exception\OrderAlreadySentException;
-use RodrigoPedra\ClearSaleID\Exception\EntityCodeNotFoundException;
 
 class PackageStatus
 {
@@ -50,9 +50,17 @@ class PackageStatus
     /** @var  string */
     private $message;
 
-    /** @var  Order */
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Response\Order */
     private $order;
 
+    /**
+     * PackageStatus constructor.
+     *
+     * @param  string $xml
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \Exception
+     */
     public function __construct( $xml )
     {
         try {
@@ -85,31 +93,11 @@ class PackageStatus
         $this->validateStatusCode();
     }
 
-    public function getTransactionId()
-    {
-        return $this->transactionId;
-    }
-
-    public function getStatusCode()
-    {
-        return intval( $this->statusCode );
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    public function isSuccessful()
-    {
-        return $this->getStatusCode() === self::STATUS_CODE_SUCCESS;
-    }
-
+    /**
+     * @param  string $transactionId
+     *
+     * @return $this
+     */
     private function setTransactionId( $transactionId )
     {
         $this->transactionId = $transactionId;
@@ -117,6 +105,12 @@ class PackageStatus
         return $this;
     }
 
+    /**
+     * @param  int $statusCode
+     *
+     * @return $this
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     */
     private function setStatusCode( $statusCode )
     {
         $statusCode = intval( $statusCode );
@@ -130,6 +124,11 @@ class PackageStatus
         return $this;
     }
 
+    /**
+     * @param  string $message
+     *
+     * @return $this
+     */
     private function setMessage( $message )
     {
         $this->message = trim( $message );
@@ -137,6 +136,11 @@ class PackageStatus
         return $this;
     }
 
+    /**
+     * @param  $orderObject
+     *
+     * @return $this
+     */
     private function setOrder( $orderObject )
     {
         $this->order = new Order(
@@ -149,6 +153,9 @@ class PackageStatus
         return $this;
     }
 
+    /**
+     * @throws  \Exception
+     */
     private function validateStatusCode()
     {
         if (self::STATUS_CODE_SUCCESS === $this->getStatusCode()) {
@@ -162,5 +169,45 @@ class PackageStatus
         $exceptionClass = static::$statusCodeExceptions[ $this->getStatusCode() ];
 
         throw new $exceptionClass( $this->getMessage(), $this->getStatusCode() );
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return intval( $this->statusCode );
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    /**
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccessful()
+    {
+        return $this->getStatusCode() === self::STATUS_CODE_SUCCESS;
     }
 }

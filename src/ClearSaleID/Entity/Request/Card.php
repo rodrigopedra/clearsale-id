@@ -2,9 +2,9 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
+use XMLWriter;
 
 class Card implements XmlEntityInterface
 {
@@ -44,11 +44,19 @@ class Card implements XmlEntityInterface
     /** @var  string */
     private $name;
 
+    /**
+     * @return string
+     */
     public function getNumberHash()
     {
         return $this->numberHash;
     }
 
+    /**
+     * @param  string $numberHash
+     *
+     * @return $this
+     */
     public function setNumberHash( $numberHash )
     {
         $numberHash = trim( $numberHash );
@@ -63,11 +71,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getBin()
     {
         return $this->bin;
     }
 
+    /**
+     * @param  string $bin
+     *
+     * @return $this
+     */
     public function setBin( $bin )
     {
         $bin = trim( $bin );
@@ -82,11 +98,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getLastDigits()
     {
         return $this->lastDigits;
     }
 
+    /**
+     * @param  string $lastDigits
+     *
+     * @return $this
+     */
     public function setLastDigits( $lastDigits )
     {
         $lastDigits = trim( $lastDigits );
@@ -101,11 +125,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param  string $type
+     *
+     * @return $this
+     */
     public function setType( $type )
     {
         if (!in_array( $type, self::$cards )) {
@@ -117,11 +149,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getExpirationDate()
     {
         return $this->expirationDate;
     }
 
+    /**
+     * @param  string $expirationDate
+     *
+     * @return $this
+     */
     public function setExpirationDate( $expirationDate )
     {
         $this->expirationDate = $expirationDate;
@@ -129,11 +169,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param  string $name
+     *
+     * @return $this
+     */
     public function setName( $name )
     {
         $this->name = $name;
@@ -141,6 +189,9 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         if ($this->numberHash) {

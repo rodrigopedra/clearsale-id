@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Phone implements XmlEntityInterface
 {
@@ -42,6 +42,13 @@ class Phone implements XmlEntityInterface
     /** @var  string */
     private $extension;
 
+    /**
+     * @param  int    $type
+     * @param  string $ddd
+     * @param  string $number
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Phone
+     */
     public static function create( $type, $ddd, $number )
     {
         $instance = new self;
@@ -53,11 +60,19 @@ class Phone implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return int
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param  int $type
+     *
+     * @return $this
+     */
     public function setType( $type )
     {
         if (!in_array( intval( $type ), self::$types )) {
@@ -69,11 +84,19 @@ class Phone implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDDI()
     {
         return $this->ddi;
     }
 
+    /**
+     * @param  string $ddi
+     *
+     * @return $this
+     */
     public function setDDI( $ddi )
     {
         $ddi = preg_replace( '/^0+|\D/', '', $ddi );
@@ -87,11 +110,19 @@ class Phone implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDDD()
     {
         return $this->ddd;
     }
 
+    /**
+     * @param  string $ddd
+     *
+     * @return $this
+     */
     public function setDDD( $ddd )
     {
         $ddd = preg_replace( '/^0+|\D/', '', $ddd );
@@ -105,11 +136,19 @@ class Phone implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getNumber()
     {
         return $this->number;
     }
 
+    /**
+     * @param  string $number
+     *
+     * @return $this
+     */
     public function setNumber( $number )
     {
         $number = preg_replace( '/^0+|\D/', '', $number );
@@ -123,11 +162,19 @@ class Phone implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getExtension()
     {
         return $this->extension;
     }
 
+    /**
+     * @param  string $extension
+     *
+     * @return $this
+     */
     public function setExtension( $extension )
     {
         if (strlen( $extension ) > 5) {
@@ -140,6 +187,11 @@ class Phone implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Telefone' );

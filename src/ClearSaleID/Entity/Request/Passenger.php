@@ -2,10 +2,10 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use XMLWriter;
 use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
+use XMLWriter;
 
 class Passenger implements XmlEntityInterface
 {
@@ -39,6 +39,13 @@ class Passenger implements XmlEntityInterface
     /** @var  string */
     private $legalDocument;
 
+    /**
+     * @param  string $name
+     * @param  int    $legalDocumentType
+     * @param  string $legalDocument
+     *
+     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Passenger
+     */
     public static function create( $name, $legalDocumentType, $legalDocument )
     {
         $instance = new self;
@@ -50,11 +57,19 @@ class Passenger implements XmlEntityInterface
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param  string $name
+     *
+     * @return $this
+     */
     public function setName( $name )
     {
         $this->name = $name;
@@ -62,11 +77,19 @@ class Passenger implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getFrequentFlyerCard()
     {
         return $this->frequentFlyerCard;
     }
 
+    /**
+     * @param  string $frequentFlyerCard
+     *
+     * @return $this
+     */
     public function setFrequentFlyerCard( $frequentFlyerCard )
     {
         $this->frequentFlyerCard = $frequentFlyerCard;
@@ -74,11 +97,19 @@ class Passenger implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getLegalDocumentType()
     {
         return $this->legalDocumentType;
     }
 
+    /**
+     * @param  int $legalDocumentType
+     *
+     * @return $this
+     */
     public function setLegalDocumentType( $legalDocumentType )
     {
         if (!in_array( intval( $legalDocumentType ), $this->documentTypes )) {
@@ -90,11 +121,19 @@ class Passenger implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getLegalDocument()
     {
         return $this->legalDocument;
     }
 
+    /**
+     * @param  string $legalDocument
+     *
+     * @return $this
+     */
     public function setLegalDocument( $legalDocument )
     {
         $this->legalDocument = $legalDocument;
@@ -102,6 +141,11 @@ class Passenger implements XmlEntityInterface
         return $this;
     }
 
+    /**
+     * @param  \XMLWriter $XMLWriter
+     *
+     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
+     */
     public function toXML( XMLWriter $XMLWriter )
     {
         $XMLWriter->startElement( 'Passageiro' );

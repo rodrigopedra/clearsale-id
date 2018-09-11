@@ -3,11 +3,11 @@
 namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
-use RodrigoPedra\ClearSaleID\Entity\Request\Address;
-use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\AbstractCustomer;
+use RodrigoPedra\ClearSaleID\Entity\Request\Address;
 use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\CustomerShippingFixture;
+use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
+use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 
 class CustomerShippingDataTest extends TestCase
 {
@@ -26,7 +26,7 @@ class CustomerShippingDataTest extends TestCase
         $this->customer = null;
     }
 
-    /** @test  */
+    /** @test */
     public function testCustomerShippingData()
     {
         $phones = $this->customer->getPhones();
@@ -39,7 +39,7 @@ class CustomerShippingDataTest extends TestCase
         $this->assertInstanceOf( Phone::class, $phone );
     }
 
-    /** @test  */
+    /** @test */
     public function testCustomerShippingDataToXml()
     {
         $outputXML       = $this->generateXML( $this->customer );
