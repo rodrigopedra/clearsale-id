@@ -20,7 +20,7 @@ ext-xml
 
 No Ubuntu, você pode instalar através do seguinte comando:
 
-```
+```bash
 sudo apt-get install openssl php-soap php-xml
 ```
 
@@ -30,10 +30,6 @@ A extensão `openssl` deve ser habilitada em seu arquivo `php.ini`.
 
 A maneira mais fácil de instalar a biblioteca é através do [Composer](http://getcomposer.org/).
 
-```JSON
-{
-    "require": {
-        "rodrigopedra/clearsale-id": "^0.4"
-    }
-}
+```bash
+composer require rodrigopedra/clearsale-id
 ```
