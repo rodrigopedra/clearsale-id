@@ -774,7 +774,7 @@ class Order implements XmlEntityInterface
             throw new RequiredFieldException( 'Field TotalItems of the Order object is required' );
         }
 
-        if ($this->totalOrder) {
+        if (is_numeric( $this->totalOrder ) && $this->totalOrder >= 0) {
             $XMLWriter->writeElement( 'ValorTotalPedido', $this->totalOrder );
         } else {
             throw new RequiredFieldException( 'Field TotalOrder of the Order object is required' );
