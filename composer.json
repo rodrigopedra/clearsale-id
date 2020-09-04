@@ -1,33 +1,36 @@
 {
-  "name": "rodrigopedra/clearsale-id",
-  "description": "ClearSale ID WebService Integration",
-  "keywords": [
-    "ClearSale",
-    "ClearSale ID"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Rodrigo Pedra Brum",
-      "email": "rodrigo.pedra@gmail.com"
+    "name": "rodrigopedra/clearsale-id",
+    "description": "ClearSale ID WebService Integration",
+    "keywords": [
+        "ClearSale",
+        "ClearSale ID"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rodrigo Pedra Brum",
+            "email": "rodrigo.pedra@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-simplexml": "*",
+        "ext-soap": "*",
+        "ext-xml": "*",
+        "ext-xmlwriter": "*",
+        "psr/log": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+        "psr-4": {
+            "RodrigoPedra\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
-  ],
-  "require": {
-    "php": ">=5.5.0",
-    "ext-json": "*",
-    "ext-openssl": "*",
-    "ext-simplexml": "*",
-    "ext-soap": "*",
-    "ext-xml": "*",
-    "ext-xmlwriter": "*",
-    "psr/log": "^1.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "@stable"
-  },
-  "autoload": {
-    "psr-4": {
-      "RodrigoPedra\\": "src/"
-    }
-  }
 }

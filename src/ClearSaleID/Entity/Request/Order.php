@@ -964,7 +964,7 @@ class Order implements XmlEntityInterface
             throw new RequiredFieldException( 'Field CustomerShippingData of the Order object is required' );
         }
 
-        if (count( $this->payments ) > 0) {
+        if ($this->payments && count( $this->payments ) > 0) {
             $XMLWriter->startElement( 'Pagamentos' );
 
             foreach ($this->payments as $payment) {
@@ -976,7 +976,7 @@ class Order implements XmlEntityInterface
             throw new RequiredFieldException( 'Field Payments of the Order object is required' );
         }
 
-        if (count( $this->items ) > 0) {
+        if ($this->items && count( $this->items ) > 0) {
             $XMLWriter->startElement( 'Itens' );
 
             foreach ($this->items as $item) {
@@ -988,7 +988,7 @@ class Order implements XmlEntityInterface
             throw new RequiredFieldException( 'Field Items of the Order object is required' );
         }
 
-        if (count( $this->passengers ) > 0) {
+        if ($this->passengers && count( $this->passengers ) > 0) {
             $XMLWriter->startElement( 'Passageiros' );
 
             foreach ($this->passengers as $passenger) {
@@ -998,7 +998,7 @@ class Order implements XmlEntityInterface
             $XMLWriter->endElement();
         }
 
-        if (count( $this->connections ) > 0) {
+        if ($this->connections && count( $this->connections ) > 0) {
             $XMLWriter->startElement( 'Conexoes' );
 
             foreach ($this->connections as $connection) {
