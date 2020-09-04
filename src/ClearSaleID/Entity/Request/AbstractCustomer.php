@@ -356,7 +356,7 @@ abstract class AbstractCustomer implements XmlEntityInterface
             throw new RequiredFieldException( 'Field Address of the Customer object is required' );
         }
 
-        if (count( $this->phones ) > 0) {
+        if ($this->phones && count( $this->phones ) > 0) {
             $XMLWriter->startElement( 'Telefones' );
 
             foreach ($this->phones as $phone) {
