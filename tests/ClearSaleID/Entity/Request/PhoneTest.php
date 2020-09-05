@@ -1,11 +1,11 @@
 <?php
 
-namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
+namespace RodrigoPedra\Tests\ClearSaleID\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\PhoneFixture;
 use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
+use RodrigoPedra\Tests\ClearSaleID\Entity\Request\Fixtures\PhoneFixture;
 
 class PhoneTest extends TestCase
 {
@@ -27,28 +27,28 @@ class PhoneTest extends TestCase
     /** @test */
     public function testPhone()
     {
-        $this->assertSame( Phone::COMERCIAL, $this->phone->getType() );
-        $this->assertSame( '11', $this->phone->getDDD() );
-        $this->assertSame( '37288788', $this->phone->getNumber() );
+        $this->assertSame(Phone::COMERCIAL, $this->phone->getType());
+        $this->assertSame('11', $this->phone->getDDD());
+        $this->assertSame('37288788', $this->phone->getNumber());
     }
 
     /** @test */
     public function testPhoneToXml()
     {
-        $outputXML       = $this->generateXML( $this->phone );
+        $outputXML = $this->generateXML($this->phone);
         $expectedXmlFile = __DIR__ . '/../../../data/phone.xml';
 
-        $this->assertXmlStringEqualsXmlFile( $expectedXmlFile, $outputXML );
+        $this->assertXmlStringEqualsXmlFile($expectedXmlFile, $outputXML);
     }
 
-    private function generateXML( XmlEntityInterface $xmlEntity )
+    private function generateXML(XmlEntityInterface $xmlEntity)
     {
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
-        $xmlWriter->setIndent( false );
+        $xmlWriter->setIndent(false);
 
-        $xmlEntity->toXML( $xmlWriter );
+        $xmlEntity->toXML($xmlWriter);
 
-        return $xmlWriter->outputMemory( true );
+        return $xmlWriter->outputMemory(true);
     }
 }

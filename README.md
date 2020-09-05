@@ -8,7 +8,7 @@ Baseado no repositório [https://github.com/lucasmro/ClearSale](https://github.c
 
 ## Requisitos
 
-PHP 5.5+
+PHP 7.1+
 
 Extensões PHP
 

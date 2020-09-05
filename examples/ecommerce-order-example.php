@@ -1,51 +1,51 @@
 <?php
 
-date_default_timezone_set( 'America/Sao_Paulo' );
+date_default_timezone_set('America/Sao_Paulo');
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/logger.php';
 
-use RodrigoPedra\ClearSaleID\Service\Analysis;
-use RodrigoPedra\ClearSaleID\Service\Connector;
-use RodrigoPedra\ClearSaleID\Environment\Sandbox;
-use RodrigoPedra\ClearSaleID\Service\Integration;
-use RodrigoPedra\ClearSaleID\Entity\Request\Item;
-use RodrigoPedra\ClearSaleID\Entity\Request\Order;
-use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
-use RodrigoPedra\ClearSaleID\Entity\Request\Address;
-use RodrigoPedra\ClearSaleID\Entity\Request\Payment;
-use RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint;
 use RodrigoPedra\ClearSaleID\Entity\Request\AbstractCustomer;
+use RodrigoPedra\ClearSaleID\Entity\Request\Address;
 use RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData;
 use RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData;
+use RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint;
+use RodrigoPedra\ClearSaleID\Entity\Request\Item;
+use RodrigoPedra\ClearSaleID\Entity\Request\Order;
+use RodrigoPedra\ClearSaleID\Entity\Request\Payment;
+use RodrigoPedra\ClearSaleID\Entity\Request\Phone;
+use RodrigoPedra\ClearSaleID\Environment\Sandbox;
+use RodrigoPedra\ClearSaleID\Service\Analysis;
+use RodrigoPedra\ClearSaleID\Service\Connector;
+use RodrigoPedra\ClearSaleID\Service\Integration;
 
 try {
     // Dados da Integração com a ClearSale
     $entityCode = '<CLEARSALE_ENTITY_CODE>';
 
     // ambiente
-    $environment = new Sandbox( $entityCode, new ExampleLogger );
-    $environment->setDebug( true );
+    $environment = new Sandbox($entityCode, new ExampleLogger());
+    $environment->setDebug(true);
 
     // serviços
-    $connector   = new Connector( $environment );
-    $integration = new Integration( $connector );
-    $clearSale   = new Analysis( $integration );
+    $connector = new Connector($environment);
+    $integration = new Integration($connector);
+    $clearSale = new Analysis($integration);
 
     // Dados do Pedido
-    $fingerPrint          = new FingerPrint( createSessionId() );
-    $orderId              = createOrderId();
-    $date                 = new \DateTime();
-    $email                = 'cliente@clearsale.com.br';
-    $totalItems           = 10.0;
-    $totalOrder           = 17.5;
+    $fingerPrint = new FingerPrint(createSessionId());
+    $orderId = createOrderId();
+    $date = new \DateTime();
+    $email = 'cliente@clearsale.com.br';
+    $totalItems = 10.0;
+    $totalOrder = 17.5;
     $quantityInstallments = 1;
-    $ip                   = '127.0.0.1';
-    $origin               = 'WEB';
-    $customerBillingData  = createCustomerBillingData();
+    $ip = '127.0.0.1';
+    $origin = 'WEB';
+    $customerBillingData = createCustomerBillingData();
     $customerShippingData = createCustomerShippingData();
-    $item                 = Item::create( 1, 'Adaptador USB', 10.0, 1 );
-    $payment              = Payment::create( Payment::BOLETO_BANCARIO, new \DateTime(), 17.5 );
+    $item = Item::create(1, 'Adaptador USB', 10.0, 1);
+    $payment = Payment::create(Payment::BOLETO_BANCARIO, new \DateTime(), 17.5);
 
     // Criar Pedido
     $order = Order::createEcommerceOrder(
@@ -64,7 +64,7 @@ try {
         $item
     );
 
-    $response = $clearSale->analysis( $order );
+    $response = $clearSale->analysis($order);
 
     // Resultado da análise
     switch ($response) {
@@ -83,10 +83,10 @@ try {
             echo 'Erro' . PHP_EOL;
     }
 
-    if ($clearSale->updateOrderStatus( $orderId, Analysis::UPDATE_ORDER_STATUS_ORDER_APPROVED ) === true) {
+    if ($clearSale->updateOrderStatus($orderId, Analysis::UPDATE_ORDER_STATUS_ORDER_APPROVED) === true) {
         echo 'Status do pedido atualizado';
     }
-} catch ( Exception $e ) {
+} catch (Exception $e) {
     echo 'ERRO', PHP_EOL, PHP_EOL;
 
     // Erro genérico da análise
@@ -95,22 +95,22 @@ try {
 
 function createOrderId()
 {
-    return sprintf( 'TEST-%s', createSessionId() );
+    return \sprintf('TEST-%s', createSessionId());
 }
 
 function createSessionId()
 {
-    return md5( uniqid( rand(), true ) );
+    return \md5(\uniqid(\rand(), true));
 }
 
 function createCustomerBillingData()
 {
-    $id            = '1';
+    $id = '1';
     $legalDocument = '63165236372';
-    $name          = 'Fulano da Silva';
-    $address       = createAddress();
-    $phone         = Phone::create( Phone::COMERCIAL, '11', '37288788' );
-    $birthDate     = new \DateTime( '1980-01-01' );
+    $name = 'Fulano da Silva';
+    $address = createAddress();
+    $phone = Phone::create(Phone::COMERCIAL, '11', '37288788');
+    $birthDate = new \DateTime('1980-01-01');
 
     return CustomerBillingData::create(
         $id,
@@ -125,11 +125,11 @@ function createCustomerBillingData()
 
 function createCustomerShippingData()
 {
-    $id            = '1';
+    $id = '1';
     $legalDocument = '63165236372';
-    $name          = 'Fulano da Silva';
-    $address       = createAddress();
-    $phone         = Phone::create( Phone::COMERCIAL, '11', '37288788' );
+    $name = 'Fulano da Silva';
+    $address = createAddress();
+    $phone = Phone::create(Phone::COMERCIAL, '11', '37288788');
 
     return CustomerShippingData::create(
         $id,
@@ -143,15 +143,15 @@ function createCustomerShippingData()
 
 function createAddress()
 {
-    $street  = 'Rua José de Oliveira Coutinho';
-    $number  = 151;
-    $county  = 'Barra Funda';
+    $street = 'Rua José de Oliveira Coutinho';
+    $number = 151;
+    $county = 'Barra Funda';
     $country = 'Brasil';
-    $city    = 'São Paulo';
-    $state   = 'SP';
-    $zip     = '01144020';
+    $city = 'São Paulo';
+    $state = 'SP';
+    $zip = '01144020';
 
-    return Address::create( $street, $number, $county, $country, $city, $state, $zip );
+    return Address::create($street, $number, $county, $country, $city, $state, $zip);
 }
 
 exit;

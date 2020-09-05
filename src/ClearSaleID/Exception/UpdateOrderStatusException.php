@@ -2,9 +2,6 @@
 
 namespace RodrigoPedra\ClearSaleID\Exception;
 
-use Exception;
-
-class UpdateOrderStatusException extends Exception
+class UpdateOrderStatusException extends \RuntimeException
 {
-
 }

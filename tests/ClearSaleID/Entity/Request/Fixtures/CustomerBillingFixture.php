@@ -1,6 +1,6 @@
 <?php
 
-namespace RodrigoPedra\ClearSaleID\Entity\Request\Fixtures;
+namespace RodrigoPedra\Tests\ClearSaleID\Entity\Request\Fixtures;
 
 use DateTime;
 use RodrigoPedra\ClearSaleID\Entity\Request\AbstractCustomer;
@@ -10,12 +10,12 @@ class CustomerBillingFixture
 {
     public static function createCustomerBillingData()
     {
-        $id            = '1';
+        $id = '1';
         $legalDocument = '63165236372';
-        $name          = 'Fulano da Silva';
-        $address       = AddressFixture::createAddress();
-        $phone         = PhoneFixture::createPhone();
-        $birthDate     = new DateTime( '1980-01-01' );
+        $name = 'Fulano da Silva';
+        $address = AddressFixture::createAddress();
+        $phone = PhoneFixture::createPhone();
+        $birthDate = new DateTime('1980-01-01');
 
         return CustomerBillingData::create(
             $id,

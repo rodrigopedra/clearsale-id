@@ -2,19 +2,20 @@
 
 namespace RodrigoPedra\ClearSaleID\Service;
 
-use Exception;
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order as OrderRequest;
+use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
+use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
+use RodrigoPedra\ClearSaleID\Exception\TransactionFailedException;
 
 class Analysis
 {
-    const ORDER_STATUS_APPROVED          = 'Aprovado';
-    const ORDER_STATUS_REJECTED          = 'Reprovado';
-    const ORDER_STATUS_NO_ORDER_RETURNED = 'Erro';
-    const ORDER_STATUS_INVALID           = 'Erro';
+    public const ORDER_STATUS_APPROVED = 'Aprovado';
+    public const ORDER_STATUS_REJECTED = 'Reprovado';
+    public const ORDER_STATUS_NO_ORDER_RETURNED = 'Erro';
+    public const ORDER_STATUS_INVALID = 'Erro';
 
-    const UPDATE_ORDER_STATUS_ORDER_APPROVED = 26;
-    const UPDATE_ORDER_STATUS_ORDER_REJECTED = 27;
+    public const UPDATE_ORDER_STATUS_ORDER_APPROVED = 26;
+    public const UPDATE_ORDER_STATUS_ORDER_REJECTED = 27;
 
     private static $updateOrderStatusList = [
         self::UPDATE_ORDER_STATUS_ORDER_APPROVED,
@@ -30,12 +31,7 @@ class Analysis
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus */
     private $updateOrderStatusResponse;
 
-    /**
-     * Construtor para gerar a integração com a ClearSale
-     *
-     * @param  \RodrigoPedra\ClearSaleID\Service\Integration $integration
-     */
-    public function __construct( Integration $integration )
+    public function __construct(Integration $integration)
     {
         $this->integration = $integration;
     }
@@ -43,35 +39,35 @@ class Analysis
     /**
      * Método para envio de pedidos e retorno do status
      *
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
-     *
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order  $order
      * @return string
-     * @throws \Exception
+     * @throws \SoapFault
      */
-    public function analysis( OrderRequest $order )
+    public function analysis(OrderRequest $order): string
     {
-        $packageStatus = $this->integration->sendOrder( $order );
+        $packageStatus = $this->integration->sendOrder($order);
 
-        if (!$packageStatus->isSuccessful()) {
-            throw new Exception( sprintf( 'Transaction Failed! (statusCode: %s)', $packageStatus->getStatusCode() ) );
+        if (! $packageStatus->isSuccessful()) {
+            throw new TransactionFailedException(
+                \sprintf('Transaction Failed! (statusCode: %s)', $packageStatus->getStatusCode())
+            );
         }
 
-        return $this->checkOrderStatus( $order->getId() );
+        return $this->checkOrderStatus($order->getId());
     }
 
     /**
      * Retorna o status de aprovação de um pedido
      *
-     * @param  string $orderId
-     *
+     * @param  string  $orderId
      * @return string
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \SoapFault
      */
-    public function checkOrderStatus( $orderId )
+    public function checkOrderStatus(string $orderId): string
     {
-        $this->packageStatusResponse = $this->integration->checkOrderStatus( $orderId );
+        $this->packageStatusResponse = $this->integration->checkOrderStatus($orderId);
 
-        if (!$this->packageStatusResponse->getOrder()) {
+        if (! $this->packageStatusResponse->getOrder()) {
             // no order returned
             return self::ORDER_STATUS_NO_ORDER_RETURNED;
         }
@@ -91,21 +87,19 @@ class Analysis
     /**
      * Método para atualizar o pedido com o status do pagamento
      *
-     * @param  string $orderId
-     * @param  string $newStatusCode
-     * @param  string $notes
-     *
+     * @param  string  $orderId
+     * @param  int  $newStatusCode
+     * @param  string  $notes
      * @return boolean
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
+     * @throws \SoapFault
      */
-    public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
+    public function updateOrderStatus(string $orderId, int $newStatusCode, string $notes = ''): bool
     {
-        if (!in_array( $newStatusCode, self::$updateOrderStatusList )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid new status code (%s)', $newStatusCode ) );
+        if (! \in_array($newStatusCode, self::$updateOrderStatusList)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid new status code (%s)', $newStatusCode));
         }
 
-        $this->updateOrderStatusResponse = $this->integration->updateOrderStatus( $orderId, $newStatusCode, $notes );
+        $this->updateOrderStatusResponse = $this->integration->updateOrderStatus($orderId, $newStatusCode, $notes);
 
         return true;
     }
@@ -115,7 +109,7 @@ class Analysis
      *
      * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
      */
-    public function getPackageStatus()
+    public function getPackageStatus(): PackageStatus
     {
         return $this->packageStatusResponse;
     }
@@ -125,7 +119,7 @@ class Analysis
      *
      * @return \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus
      */
-    public function getUpdateOrderStatus()
+    public function getUpdateOrderStatus(): UpdateOrderStatus
     {
         return $this->updateOrderStatusResponse;
     }

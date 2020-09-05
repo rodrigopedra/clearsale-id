@@ -2,10 +2,8 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use DateTime;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Connection implements XmlEntityInterface
 {
@@ -15,7 +13,7 @@ class Connection implements XmlEntityInterface
     /** @var  string */
     private $flightNumber;
 
-    /** @var  \DateTime */
+    /** @var  \DateTimeInterface */
     private $flightDate;
 
     /** @var  string */
@@ -27,265 +25,184 @@ class Connection implements XmlEntityInterface
     /** @var  string */
     private $to;
 
-    /** @var  \DateTime */
+    /** @var  \DateTimeInterface */
     private $departureDate;
 
-    /** @var  \DateTime */
+    /** @var  \DateTimeInterface */
     private $arrivalDate;
 
-    /**
-     * @param  string    $company
-     * @param  string    $flightNumber
-     * @param  \DateTime $flightDate
-     * @param  string    $class
-     * @param  string    $from
-     * @param  string    $to
-     * @param  \DateTime $departureDate
-     * @param  \DateTime $arrivalDate
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Connection
-     */
-    public static function create(
-        $company,
-        $flightNumber,
-        DateTime $flightDate,
-        $class,
-        $from,
-        $to,
-        DateTime $departureDate,
-        DateTime $arrivalDate
+    public function __construct(
+        string $company,
+        string $flightNumber,
+        \DateTimeInterface $flightDate,
+        string $class,
+        string $from,
+        string $to,
+        \DateTimeInterface $departureDate,
+        \DateTimeInterface $arrivalDate
     ) {
-        $instance = new self;
-
-        $instance->setCompany( $company );
-        $instance->setFlightNumber( $flightNumber );
-        $instance->setFlightDate( $flightDate );
-        $instance->setClass( $class );
-        $instance->setFrom( $from );
-        $instance->setTo( $to );
-        $instance->setDepartureDate( $departureDate );
-        $instance->setArrivalDate( $arrivalDate );
-
-        return $instance;
+        $this->setCompany($company);
+        $this->setFlightNumber($flightNumber);
+        $this->setFlightDate($flightDate);
+        $this->setClass($class);
+        $this->setFrom($from);
+        $this->setTo($to);
+        $this->setDepartureDate($departureDate);
+        $this->setArrivalDate($arrivalDate);
     }
 
-    /**
-     * @return string
-     */
-    public function getCompany()
+    public static function create(
+        string $company,
+        string $flightNumber,
+        \DateTimeInterface $flightDate,
+        string $class,
+        string $from,
+        string $to,
+        \DateTimeInterface $departureDate,
+        \DateTimeInterface $arrivalDate
+    ): self {
+        return new self($company, $flightNumber, $flightDate, $class, $from, $to, $departureDate, $arrivalDate);
+    }
+
+    public function getCompany(): string
     {
         return $this->company;
     }
 
-    /**
-     * @param  string $company
-     *
-     * @return $this
-     */
-    public function setCompany( $company )
+    public function setCompany(string $company): self
     {
+        $company = \trim($company);
+
+        if (\strlen($company) === 0) {
+            throw new RequiredFieldException('Company is required');
+        }
+
         $this->company = $company;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFlightNumber()
+    public function getFlightNumber(): string
     {
         return $this->flightNumber;
     }
 
-    /**
-     * @param  string $flightNumber
-     *
-     * @return $this
-     */
-    public function setFlightNumber( $flightNumber )
+    public function setFlightNumber(string $flightNumber): self
     {
+        $flightNumber = \trim($flightNumber);
+
+        if (\strlen($flightNumber) === 0) {
+            throw new RequiredFieldException('Flight Number is required');
+        }
+
         $this->flightNumber = $flightNumber;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getFlightDate()
+    public function getFlightDate(): \DateTimeInterface
     {
         return $this->flightDate;
     }
 
-    /**
-     * @param  \DateTime $flightDate
-     *
-     * @return $this
-     */
-    public function setFlightDate( DateTime $flightDate )
+    public function setFlightDate(\DateTimeInterface $flightDate): self
     {
         $this->flightDate = $flightDate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @param  string $class
-     *
-     * @return $this
-     */
-    public function setClass( $class )
+    public function setClass(string $class): self
     {
+        $class = \trim($class);
+
+        if (\strlen($class) === 0) {
+            throw new RequiredFieldException('Class is required');
+        }
+
         $this->class = $class;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFrom()
+    public function getFrom(): string
     {
         return $this->from;
     }
 
-    /**
-     * @param  string $from
-     *
-     * @return $this
-     */
-    public function setFrom( $from )
+    public function setFrom(string $from): self
     {
+        $from = \trim($from);
+
+        if (\strlen($from) === 0) {
+            throw new RequiredFieldException('From is required');
+        }
+
         $this->from = $from;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTo()
+    public function getTo(): string
     {
         return $this->to;
     }
 
-    /**
-     * @param  string $to
-     *
-     * @return $this
-     */
-    public function setTo( $to )
+    public function setTo(string $to): self
     {
+        $to = \trim($to);
+
+        if (\strlen($to) === 0) {
+            throw new RequiredFieldException('To is required');
+        }
+
         $this->to = $to;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDepartureDate()
+    public function getDepartureDate(): \DateTimeInterface
     {
         return $this->departureDate;
     }
 
-    /**
-     * @param  \DateTime $departureDate
-     *
-     * @return $this
-     */
-    public function setDepartureDate( DateTime $departureDate )
+    public function setDepartureDate(\DateTimeInterface $departureDate): self
     {
         $this->departureDate = $departureDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getArrivalDate()
+    public function getArrivalDate(): \DateTimeInterface
     {
         return $this->arrivalDate;
     }
 
-    /**
-     * @param  \DateTime $arrivalDate
-     *
-     * @return $this
-     */
-    public function setArrivalDate( DateTime $arrivalDate )
+    public function setArrivalDate(\DateTimeInterface $arrivalDate): self
     {
         $this->arrivalDate = $arrivalDate;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        $XMLWriter->startElement( 'Conexao' );
+        $XMLWriter->startElement('Conexao');
 
-        if ($this->company) {
-            $XMLWriter->writeElement( 'Companhia', $this->company );
-        } else {
-            throw new RequiredFieldException( 'Field Company of the Connection object is required' );
-        }
+        $XMLWriter->writeElement('Companhia', $this->company);
+        $XMLWriter->writeElement('NumeroVoo', $this->flightNumber);
+        $XMLWriter->writeElement('DataVoo', $this->flightDate->format(self::DATE_TIME_FORMAT));
+        $XMLWriter->writeElement('Classe', $this->class);
+        $XMLWriter->writeElement('Origem', $this->from);
+        $XMLWriter->writeElement('Destino', $this->to);
+        $XMLWriter->writeElement('DataPartida', $this->departureDate->format(self::DATE_TIME_FORMAT));
+        $XMLWriter->writeElement('DataChegada', $this->arrivalDate->format(self::DATE_TIME_FORMAT));
 
-        if ($this->flightNumber) {
-            $XMLWriter->writeElement( 'NumeroVoo', $this->flightNumber );
-        } else {
-            throw new RequiredFieldException( 'Field FlightNumber of the Connection object is required' );
-        }
-
-        if ($this->flightDate) {
-            $XMLWriter->writeElement( 'DataVoo', $this->flightDate->format( self::DATE_TIME_FORMAT ) );
-        } else {
-            throw new RequiredFieldException( 'Field FlightDate of the Connection object is required' );
-        }
-
-        if ($this->class) {
-            $XMLWriter->writeElement( 'Classe', $this->class );
-        } else {
-            throw new RequiredFieldException( 'Field Class of the Connection object is required' );
-        }
-
-        if ($this->from) {
-            $XMLWriter->writeElement( 'Origem', $this->from );
-        } else {
-            throw new RequiredFieldException( 'Field FROM of the Connection object is required' );
-        }
-
-        if ($this->to) {
-            $XMLWriter->writeElement( 'Destino', $this->to );
-        } else {
-            throw new RequiredFieldException( 'Field To of the Connection object is required' );
-        }
-
-        if ($this->departureDate) {
-            $XMLWriter->writeElement( 'DataPartida', $this->departureDate->format( self::DATE_TIME_FORMAT ) );
-        } else {
-            throw new RequiredFieldException( 'Field DepartureDate of the Connection object is required' );
-        }
-
-        if ($this->arrivalDate) {
-            $XMLWriter->writeElement( 'DataChegada', $this->arrivalDate->format( self::DATE_TIME_FORMAT ) );
-        } else {
-            throw new RequiredFieldException( 'Field ArrivalDate of the Connection object is required' );
-        }
-
-        $XMLWriter->endElement();
+        $XMLWriter->endElement(); // Conexao
     }
 }

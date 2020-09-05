@@ -2,21 +2,19 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Address implements XmlEntityInterface
 {
     /** @var  string */
     private $street;
 
-    /** @var  string */
-    private $number;
+    /** @var  string|null */
+    private $complement = null;
 
     /** @var  string */
-    private $complement;
+    private $number;
 
     /** @var  string */
     private $county;
@@ -28,59 +26,67 @@ class Address implements XmlEntityInterface
     private $state;
 
     /** @var  string */
-    private $country;
-
-    /** @var  string */
     private $zipCode;
 
-    /**
-     * @param  string $street
-     * @param  string $number
-     * @param  string $county
-     * @param  string $country
-     * @param  string $city
-     * @param  string $state
-     * @param  string $zipCode
-     * @param  string $complement
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Address
-     */
-    public static function create( $street, $number, $county, $country, $city, $state, $zipCode, $complement = '' )
-    {
-        $instance = new self;
+    /** @var  string */
+    private $country;
 
-        $instance->setStreet( $street );
-        $instance->setNumber( $number );
-        $instance->setCounty( $county );
-        $instance->setCountry( $country );
-        $instance->setCity( $city );
-        $instance->setState( $state );
-        $instance->setZipCode( $zipCode );
+    public function __construct(
+        string $street,
+        string $number,
+        string $county,
+        string $city,
+        string $state,
+        string $zipCode,
+        string $country
+    ) {
+        $this->setStreet($street);
+        $this->setNumber($number);
+        $this->setCounty($county);
+        $this->setCity($city);
+        $this->setState($state);
+        $this->setZipCode($zipCode);
+        $this->setCountry($country);
+    }
 
-        if (!empty( $complement )) {
-            $instance->setComplement( $complement );
+    public static function create(
+        string $street,
+        string $number,
+        string $county,
+        string $country,
+        string $city,
+        string $state,
+        string $zipCode,
+        ?string $complement = null
+    ): self {
+        $instance = new self(
+            $street,
+            $number,
+            $county,
+            $city,
+            $state,
+            $zipCode,
+            $country
+        );
+
+        if ($complement) {
+            $instance->setComplement($complement);
         }
 
         return $instance;
     }
 
-    /**
-     * @return string
-     */
-    public function getStreet()
+    public function getStreet(): string
     {
         return $this->street;
     }
 
-    /**
-     * @param  string $street
-     *
-     * @return $this
-     */
-    public function setStreet( $street )
+    public function setStreet(string $street): self
     {
-        if (empty( $street )) {
-            throw new InvalidArgumentException( 'Street is empty!' );
+        $street = \trim($street);
+
+        if (\strlen($street) === 0) {
+            throw new RequiredFieldException('Street is required');
         }
 
         $this->street = $street;
@@ -88,67 +94,47 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    /**
-     * @param  string $number
-     *
-     * @return $this
-     */
-    public function setNumber( $number )
+    public function setNumber(string $number): self
     {
-        if (empty( $number )) {
-            throw new InvalidArgumentException( 'Number is empty!' );
+        $number = \trim($number);
+
+        if (\strlen($number) === 0) {
+            throw new RequiredFieldException('Number is required');
         }
 
-        $this->number = (string)$number;
+        $this->number = $number;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getComplement()
+    public function getComplement(): ?string
     {
         return $this->complement;
     }
 
-    /**
-     * @param  string $complement
-     *
-     * @return $this
-     */
-    public function setComplement( $complement )
+    public function setComplement(string $complement): self
     {
-        $this->complement = $complement;
+        $this->complement = \trim($complement) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCounty()
+    public function getCounty(): string
     {
         return $this->county;
     }
 
-    /**
-     * @param  string $county
-     *
-     * @return $this
-     */
-    public function setCounty( $county )
+    public function setCounty(string $county): self
     {
-        if (empty( $county )) {
-            throw new InvalidArgumentException( 'County is empty!' );
+        $county = \trim($county);
+
+        if (\strlen($county) === 0) {
+            throw new RequiredFieldException('County is required');
         }
 
         $this->county = $county;
@@ -156,23 +142,17 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    /**
-     * @param  string $city
-     *
-     * @return $this
-     */
-    public function setCity( $city )
+    public function setCity(string $city): self
     {
-        if (empty( $city )) {
-            throw new InvalidArgumentException( 'City is empty!' );
+        $city = \trim($city);
+
+        if (\strlen($city) === 0) {
+            throw new RequiredFieldException('City is required');
         }
 
         $this->city = $city;
@@ -180,23 +160,17 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @param  string $state
-     *
-     * @return $this
-     */
-    public function setState( $state )
+    public function setState(string $state): self
     {
-        if (empty( $state )) {
-            throw new InvalidArgumentException( 'State is empty!' );
+        $state = \trim($state);
+
+        if (\strlen($state) === 0) {
+            throw new RequiredFieldException('State is required');
         }
 
         $this->state = $state;
@@ -204,45 +178,29 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->country;
     }
 
-    /**
-     * @param  string $country
-     *
-     * @return $this
-     */
-    public function setCountry( $country )
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getZipCode()
+    public function getZipCode(): string
     {
         return $this->zipCode;
     }
 
-    /**
-     * @param  string $zipCode
-     *
-     * @return $this
-     */
-    public function setZipCode( $zipCode )
+    public function setZipCode(string $zipCode): self
     {
-        $zipCode = preg_replace( '/\D/', '', $zipCode );
+        $zipCode = \preg_replace('/\D/', '', $zipCode);
 
-        if (empty( $zipCode )) {
-            throw new InvalidArgumentException( 'ZipCode is empty!' );
+        if (\strlen($zipCode) === 0) {
+            throw new RequiredFieldException('ZipCode is required');
         }
 
         $this->zipCode = $zipCode;
@@ -250,61 +208,23 @@ class Address implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        $XMLWriter->startElement( 'Endereco' );
+        $XMLWriter->startElement('Endereco');
 
-        if ($this->street) {
-            $XMLWriter->writeElement( 'Logradouro', $this->street );
-        } else {
-            throw new RequiredFieldException( 'Field Street of the Address object is required' );
-        }
+        $XMLWriter->writeElement('Logradouro', $this->street);
 
         if ($this->complement) {
-            $XMLWriter->writeElement( 'Complemento', $this->complement );
+            $XMLWriter->writeElement('Complemento', $this->complement);
         }
 
-        if ($this->number) {
-            $XMLWriter->writeElement( 'Numero', $this->number );
-        } else {
-            throw new RequiredFieldException( 'Field Number of the Address object is required' );
-        }
+        $XMLWriter->writeElement('Numero', $this->number);
+        $XMLWriter->writeElement('Bairro', $this->county);
+        $XMLWriter->writeElement('Cidade', $this->city);
+        $XMLWriter->writeElement('UF', $this->state);
+        $XMLWriter->writeElement('CEP', $this->zipCode);
+        $XMLWriter->writeElement('Pais', $this->country);
 
-        if ($this->county) {
-            $XMLWriter->writeElement( 'Bairro', $this->county );
-        } else {
-            throw new RequiredFieldException( 'Field County of the Address object is required' );
-        }
-
-        if ($this->city) {
-            $XMLWriter->writeElement( 'Cidade', $this->city );
-        } else {
-            throw new RequiredFieldException( 'Field City of the Address object is required' );
-        }
-
-        if ($this->state) {
-            $XMLWriter->writeElement( 'UF', $this->state );
-        } else {
-            throw new RequiredFieldException( 'Field State of the Address object is required' );
-        }
-
-        if ($this->zipCode) {
-            $XMLWriter->writeElement( 'CEP', $this->zipCode );
-        } else {
-            throw new RequiredFieldException( 'Field ZipCode of the Address object is required' );
-        }
-
-        if ($this->country) {
-            $XMLWriter->writeElement( 'Pais', $this->country );
-        } else {
-            throw new RequiredFieldException( 'Field Country of the Address object is required' );
-        }
-
-        $XMLWriter->endElement();
+        $XMLWriter->endElement(); // Endereco
     }
 }

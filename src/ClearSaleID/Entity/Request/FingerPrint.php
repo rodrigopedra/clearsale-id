@@ -4,54 +4,42 @@ namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class FingerPrint implements XmlEntityInterface
 {
     /** @var  string */
     private $sessionId;
 
-    /**
-     * FingerPrint constructor.
-     *
-     * @param  string $sessionId
-     */
-    public function __construct( $sessionId )
+    public function __construct(string $sessionId)
     {
-        $this->sessionId = $sessionId;
+        $this->setSessionId($sessionId);
     }
 
-    /**
-     * @return string
-     */
-    public function getSessionId()
+    public static function create(string $sessionId): self
+    {
+        return new self($sessionId);
+    }
+
+    public function getSessionId(): string
     {
         return $this->sessionId;
     }
 
-    /**
-     * @param  string $sessionId
-     *
-     * @return $this
-     */
-    public function setSessionId( $sessionId )
+    public function setSessionId(string $sessionId): self
     {
+        $sessionId = \trim($sessionId);
+
+        if (\strlen($sessionId) === 0) {
+            throw new RequiredFieldException('Session ID is required');
+        }
+
         $this->sessionId = $sessionId;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        if ($this->sessionId) {
-            $XMLWriter->writeElement( 'SessionID', $this->sessionId );
-        } else {
-            throw new RequiredFieldException( 'Field SessionID of the FingerPrint object is required' );
-        }
+        $XMLWriter->writeElement('SessionID', $this->sessionId);
     }
 }

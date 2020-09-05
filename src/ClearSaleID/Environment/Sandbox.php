@@ -6,17 +6,13 @@ use Psr\Log\LoggerInterface;
 
 class Sandbox extends AbstractEnvironment
 {
-    /**
-     * Sandbox constructor.
-     *
-     * @param  string                        $entityCode
-     * @param  \Psr\Log\LoggerInterface|null $logger
-     */
-    public function __construct( $entityCode, LoggerInterface $logger = null )
+    public function __construct(string $entityCode, ?LoggerInterface $logger = null)
     {
-        parent::__construct( $entityCode, $logger );
-
-        $this->regularEndpoint = 'https://homologacao.clearsale.com.br/integracaov2/service.asmx';
-        $this->extendedEnpoint = 'https://homologacao.clearsale.com.br/integracaov2/ExtendedService.asmx';
+        parent::__construct(
+            'https://homologacao.clearsale.com.br/integracaov2/service.asmx',
+            'https://homologacao.clearsale.com.br/integracaov2/ExtendedService.asmx',
+            $entityCode,
+            $logger
+        );
     }
 }

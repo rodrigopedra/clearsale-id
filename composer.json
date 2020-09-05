@@ -30,6 +30,11 @@
             "RodrigoPedra\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "RodrigoPedra\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "test": "phpunit"
     }

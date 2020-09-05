@@ -2,28 +2,24 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use DateTime;
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
-use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Payment implements XmlEntityInterface
 {
-    const CARTAO_CREDITO           = 1;
-    const BOLETO_BANCARIO          = 2;
-    const DEBITO_BANCARIO          = 3;
-    const DEBITO_BANCARIO_DINHEIRO = 4;
-    const DEBITO_BANCARIO_CHEQUE   = 5;
-    const TRANSFERENCIA_BANCARIA   = 6;
-    const SEDEX_A_COBRAR           = 7;
-    const CHEQUE                   = 8;
-    const DINHEIRO                 = 9;
-    const FINANCIAMENTO            = 10;
-    const FATURA                   = 11;
-    const CUPOM                    = 12;
-    const MULTICHEQUE              = 13;
-    const OUTROS                   = 14;
+    public const CARTAO_CREDITO = 1;
+    public const BOLETO_BANCARIO = 2;
+    public const DEBITO_BANCARIO = 3;
+    public const DEBITO_BANCARIO_DINHEIRO = 4;
+    public const DEBITO_BANCARIO_CHEQUE = 5;
+    public const TRANSFERENCIA_BANCARIA = 6;
+    public const SEDEX_A_COBRAR = 7;
+    public const CHEQUE = 8;
+    public const DINHEIRO = 9;
+    public const FINANCIAMENTO = 10;
+    public const FATURA = 11;
+    public const CUPOM = 12;
+    public const MULTICHEQUE = 13;
+    public const OUTROS = 14;
 
     private static $paymentTypes = [
         self::CARTAO_CREDITO,
@@ -45,59 +41,45 @@ class Payment implements XmlEntityInterface
     /** @var  int */
     private $type;
 
-    /** @var  int */
-    private $sequential;
+    /** @var  int|null */
+    private $sequential = null;
 
-    /** @var  \DateTime */
+    /** @var  \DateTimeInterface */
     private $date;
 
     /** @var  float */
     private $amount;
 
-    /** @var  int */
-    private $quantityInstallments;
+    /** @var  int|null */
+    private $quantityInstallments = null;
 
-    /** @var \RodrigoPedra\ClearSaleID\Entity\Request\ Card */
-    private $card;
+    /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Card|null */
+    private $card = null;
 
-    /** @var  string */
-    private $legalDocument;
+    /** @var  string|null */
+    private $legalDocument = null;
 
-    /**
-     * @param  int       $type
-     * @param  \DateTime $date
-     * @param  float     $amount
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment
-     */
-    public static function create( $type, DateTime $date, $amount )
+    public function __construct(string $type, \DateTimeInterface $date, float $amount)
     {
-        $instance = new self;
-
-        $instance->setType( $type );
-        $instance->setDate( $date );
-        $instance->setAmount( $amount );
-
-        return $instance;
+        $this->setType($type);
+        $this->setDate($date);
+        $this->setAmount($amount);
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public static function create(string $type, \DateTimeInterface $date, float $amount): self
+    {
+        return new self($type, $date, $amount);
+    }
+
+    public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param  int $type
-     *
-     * @return $this
-     */
-    public function setType( $type )
+    public function setType(int $type): self
     {
-        if (!array_key_exists( intval( $type ), self::$paymentTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid payment type (%s)', $type ) );
+        if (! \array_key_exists($type, self::$paymentTypes)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid payment type (%s)', $type));
         }
 
         $this->type = $type;
@@ -105,100 +87,71 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getSequential()
+    public function getSequential(): ?int
     {
         return $this->sequential;
     }
 
-    /**
-     * @param  int $sequential
-     *
-     * @return $this
-     */
-    public function setSequential( $sequential )
+    public function setSequential(int $sequential): self
     {
-        if (preg_match( '/^[1-9]$/', $sequential ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Sequential number should be between 1 and 9 (%s)',
-                $sequential ) );
+        if (! \in_array($sequential, \range(1, 9))) {
+            throw new \InvalidArgumentException(
+                \sprintf('Sequential number should be between 1 and 9 (%s)', $sequential)
+            );
         }
 
-        $this->sequential = intval( $sequential );
+        $this->sequential = $sequential;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
 
-    /**
-     * @param  \DateTime $date
-     *
-     * @return $this
-     */
-    public function setDate( DateTime $date )
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param  float $amount
-     *
-     * @return $this
-     */
-    public function setAmount( $amount )
+    public function setAmount(float $amount): self
     {
-        if (preg_match( '/^(?:\d*\.)?\d+$/', $amount ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Amount should be a non-negative number (%s)', $amount ) );
+        if ($amount < 0.0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Amount should be a non-negative number (%s)', $amount)
+            );
         }
 
-        $this->amount = (float)number_format( $amount, 4, '.', '' );
+        $this->amount = \floatval(\number_format($amount, 4, '.', ''));
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQtyInstallments()
+    public function getQtyInstallments(): ?int
     {
         return $this->quantityInstallments;
     }
 
-    /**
-     * @param  int $quantityInstallments
-     *
-     * @return $this
-     */
-    public function setQtyInstallments( $quantityInstallments )
+    public function setQtyInstallments(int $quantityInstallments): self
     {
-        if (preg_match( '/^\d+$/', $quantityInstallments ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Installments quantity should be a non-negative integer (%s)',
-                $quantityInstallments ) );
+        if ($quantityInstallments < 0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Installments quantity should be a non-negative integer (%s)', $quantityInstallments)
+            );
         }
 
-        $quantityInstallments = intval( $quantityInstallments );
-
         if ($quantityInstallments > 99) {
-            throw new InvalidArgumentException( sprintf( 'Installments quantity should be less than 99 (%s)',
-                $quantityInstallments ) );
+            throw new \InvalidArgumentException(
+                \sprintf('Installments quantity should be less than 99 (%s)', $quantityInstallments)
+            );
         }
 
         $this->quantityInstallments = $quantityInstallments;
@@ -206,89 +159,54 @@ class Payment implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Card
-     */
-    public function getCard()
+    public function getCard(): ?Card
     {
         return $this->card;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Card $card
-     *
-     * @return $this
-     */
-    public function setCard( Card $card )
+    public function setCard(Card $card): self
     {
         $this->card = $card;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLegalDocument()
+    public function getLegalDocument(): ?string
     {
         return $this->legalDocument;
     }
 
-    /**
-     * @param  string $legalDocument
-     *
-     * @return $this
-     */
-    public function setLegalDocument( $legalDocument )
+    public function setLegalDocument(string $legalDocument): self
     {
         $this->legalDocument = $legalDocument;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        $XMLWriter->startElement( 'Pagamento' );
+        $XMLWriter->startElement('Pagamento');
 
         if ($this->sequential) {
-            $XMLWriter->writeElement( 'NumeroSequencial', $this->sequential );
+            $XMLWriter->writeElement('NumeroSequencial', $this->sequential);
         }
 
-        if ($this->date) {
-            $XMLWriter->writeElement( 'Data', $this->date->format( self::DATE_TIME_FORMAT ) );
-        } else {
-            throw new RequiredFieldException( 'Field Date of the Payment object is required' );
-        }
-
-        if (is_numeric( $this->amount ) && $this->amount >= 0.0) {
-            $XMLWriter->writeElement( 'Valor', $this->amount );
-        } else {
-            throw new RequiredFieldException( 'Field Amount of the Payment object is required' );
-        }
-
-        if ($this->type) {
-            $XMLWriter->writeElement( 'TipoPagamentoID', $this->type );
-        } else {
-            throw new RequiredFieldException( 'Field PaymentTypeID of the Payment object is required' );
-        }
+        $XMLWriter->writeElement('Data', $this->date->format(self::DATE_TIME_FORMAT));
+        $XMLWriter->writeElement('Valor', $this->amount);
+        $XMLWriter->writeElement('TipoPagamentoID', $this->type);
 
         if ($this->quantityInstallments) {
-            $XMLWriter->writeElement( 'QtdParcelas', $this->quantityInstallments );
+            $XMLWriter->writeElement('QtdParcelas', $this->quantityInstallments);
         }
 
         if ($this->card) {
-            $this->card->toXML( $XMLWriter );
+            $this->card->toXML($XMLWriter);
         }
 
         if ($this->legalDocument) {
-            $XMLWriter->writeElement( 'DocumentoLegal1', $this->legalDocument );
+            $XMLWriter->writeElement('DocumentoLegal1', $this->legalDocument);
         }
 
-        $XMLWriter->endElement();
+        $XMLWriter->endElement(); // Pagamento
     }
 }

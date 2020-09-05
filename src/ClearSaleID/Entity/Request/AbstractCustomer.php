@@ -2,23 +2,22 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use DateTime;
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 abstract class AbstractCustomer implements XmlEntityInterface
 {
-    const TYPE_PESSOA_FISICA   = 1;
-    const TYPE_PESSOA_JURIDICA = 2;
-    const SEX_MASCULINE        = 'M';
-    const SEX_FEMININE         = 'F';
+    public const TYPE_PESSOA_FISICA = 1;
+    public const TYPE_PESSOA_JURIDICA = 2;
+    public const SEX_MASCULINE = 'M';
+    public const SEX_FEMININE = 'F';
+
     protected static $customerTypes = [
         self::TYPE_PESSOA_FISICA,
         self::TYPE_PESSOA_JURIDICA,
     ];
-    protected static $sexTypes      = [
+
+    protected static $sexTypes = [
         self::SEX_MASCULINE,
         self::SEX_FEMININE,
     ];
@@ -32,45 +31,72 @@ abstract class AbstractCustomer implements XmlEntityInterface
     /** @var  string */
     protected $legalDocument1;
 
-    /** @var  string */
-    protected $legalDocument2;
+    /** @var  string|null */
+    protected $legalDocument2 = null;
 
     /** @var  string */
     protected $name;
 
-    /** @var  string */
-    protected $email;
+    /** @var  string|null */
+    protected $email = null;
 
-    /** @var  string */
-    protected $sex;
+    /** @var  string|null */
+    protected $sex = null;
 
-    /** @var  \DateTime */
-    protected $birthDate;
+    /** @var  \DateTimeInterface|null */
+    protected $birthDate = null;
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Address */
     protected $address;
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Phone[] */
-    protected $phones;
+    protected $phones = [];
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function __construct(
+        string $id,
+        string $type,
+        string $legalDocument,
+        string $name,
+        Address $address,
+        Phone $phone
+    ) {
+        $this->setId($id);
+        $this->setType($type);
+        $this->setLegalDocument1($legalDocument);
+        $this->setName($name);
+        $this->setAddress($address);
+        $this->addPhone($phone);
+    }
+
+    public static function create(
+        string $id,
+        string $type,
+        string $legalDocument,
+        string $name,
+        Address $address,
+        Phone $phone,
+        ?\DateTimeInterface $birthDate = null
+    ): self {
+        $instance = new static($id, $type, $legalDocument, $name, $address, $phone);
+
+        if ($birthDate) {
+            $instance->setBirthDate($birthDate);
+        }
+
+        return $instance;
+    }
+
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param  string $id
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setId( $id )
+    public function setId(string $id): self
     {
-        if (empty( $id )) {
-            throw new InvalidArgumentException( 'The id value is empty!' );
+        $id = \trim($id);
+
+        if (\strlen($id) === 0) {
+            throw new RequiredFieldException('Customer ID is required');
         }
 
         $this->id = $id;
@@ -78,24 +104,15 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param  int $type
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setType( $type )
+    public function setType(int $type): self
     {
-        if (!in_array( $type, self::$customerTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid type (%s)', $type ) );
+        if (! \in_array($type, self::$customerTypes)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid type (%s)', $type));
         }
 
         $this->type = $type;
@@ -103,26 +120,17 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLegalDocument1()
+    public function getLegalDocument1(): string
     {
         return $this->legalDocument1;
     }
 
-    /**
-     * @param  string $legalDocument1
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setLegalDocument1( $legalDocument1 )
+    public function setLegalDocument1(string $legalDocument1): self
     {
-        $legalDocument1 = preg_replace( '/\D/', '', $legalDocument1 );
+        $legalDocument1 = \preg_replace('/\D/', '', $legalDocument1);
 
-        if (empty( $legalDocument1 )) {
-            throw new InvalidArgumentException( 'LegalDocument1 is empty!' );
+        if (\strlen($legalDocument1) === 0) {
+            throw new RequiredFieldException('Legal Document is required');
         }
 
         $this->legalDocument1 = $legalDocument1;
@@ -130,51 +138,29 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLegalDocument2()
+    public function getLegalDocument2(): ?string
     {
         return $this->legalDocument2;
     }
 
-    /**
-     * @param  string $legalDocument2
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setLegalDocument2( $legalDocument2 )
+    public function setLegalDocument2(string $legalDocument2): self
     {
-        $legalDocument2 = preg_replace( '/\D/', '', $legalDocument2 );
-
-        if (empty( $legalDocument2 )) {
-            throw new InvalidArgumentException( 'LegalDocument2 is empty!' );
-        }
-
-        $this->legalDocument2 = $legalDocument2;
+        $this->legalDocument2 = \preg_replace('/\D/', '', $legalDocument2) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string $name
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setName( $name )
+    public function setName(string $name): self
     {
-        if (empty( $name )) {
-            throw new InvalidArgumentException( 'Name is empty!' );
+        $name = \trim($name);
+
+        if (\strlen($name) === 0) {
+            throw new RequiredFieldException('Name is required');
         }
 
         $this->name = $name;
@@ -182,44 +168,27 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param  string $email
-     *
-     * @return $this
-     */
-    public function setEmail( $email )
+    public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = \trim($email) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSex()
+    public function getSex(): ?string
     {
         return $this->sex;
     }
 
-    /**
-     * @param  string $sex
-     *
-     * @return $this
-     * @throws \InvalidArgumentException
-     */
-    public function setSex( $sex )
+    public function setSex(string $sex): self
     {
-        if (!in_array( $sex, self::$sexTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid sex (%s)', $sex ) );
+        if (! \in_array($sex, self::$sexTypes)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid sex (%s)', $sex));
         }
 
         $this->sex = $sex;
@@ -227,40 +196,24 @@ abstract class AbstractCustomer implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getBirthDate()
+    public function getBirthDate(): ?\DateTimeInterface
     {
         return $this->birthDate;
     }
 
-    /**
-     * @param  \DateTime $birthDate
-     *
-     * @return $this
-     */
-    public function setBirthDate( DateTime $birthDate )
+    public function setBirthDate(\DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
 
         return $this;
     }
 
-    /**
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Address
-     */
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->address;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Address $address
-     *
-     * @return $this
-     */
-    public function setAddress( Address $address )
+    public function setAddress(Address $address): self
     {
         $this->address = $address;
 
@@ -270,102 +223,75 @@ abstract class AbstractCustomer implements XmlEntityInterface
     /**
      * @return \RodrigoPedra\ClearSaleID\Entity\Request\Phone[]
      */
-    public function getPhones()
+    public function getPhones(): array
     {
         return $this->phones;
     }
 
     /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone|\RodrigoPedra\ClearSaleID\Entity\Request\Phone[] $phones
-     *
-     * @return $this
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone|\RodrigoPedra\ClearSaleID\Entity\Request\Phone[]  $phones
+     * @return self
      */
-    public function setPhones( $phones )
+    public function setPhones($phones): self
     {
-        $phones = is_array( $phones ) ? $phones : [ $phones ];
+        $phones = \is_iterable($phones) ? $phones : [$phones];
 
         foreach ($phones as $phone) {
-            $this->addPhone( $phone );
+            $this->addPhone($phone);
+        }
+
+        if (\count($this->phones) === 0) {
+            throw new RequiredFieldException('Customer object requires at least one Phone');
         }
 
         return $this;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Phone $phone
-     *
-     * @return $this
-     */
-    public function addPhone( Phone $phone )
+    public function addPhone(Phone $phone): self
     {
         $this->phones[] = $phone;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    abstract protected function getXMLWrapperElement(): string;
+
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        if ($this->id) {
-            $XMLWriter->writeElement( 'UsuarioID', $this->id );
-        } else {
-            throw new RequiredFieldException( 'Field ID of the Customer object is required' );
-        }
+        $XMLWriter->startElement($this->getXMLWrapperElement());
 
-        if ($this->type) {
-            $XMLWriter->writeElement( 'TipoUsuario', $this->type );
-        } else {
-            throw new RequiredFieldException( 'Field Type of the Customer object is required' );
-        }
-
-        if ($this->legalDocument1) {
-            $XMLWriter->writeElement( 'DocumentoLegal1', $this->legalDocument1 );
-        } else {
-            throw new RequiredFieldException( 'Field LegalDocument1 of the Customer object is required' );
-        }
+        $XMLWriter->writeElement('UsuarioID', $this->id);
+        $XMLWriter->writeElement('TipoUsuario', $this->type);
+        $XMLWriter->writeElement('DocumentoLegal1', $this->legalDocument1);
 
         if ($this->legalDocument2) {
-            $XMLWriter->writeElement( 'DocumentoLegal2', $this->legalDocument2 );
+            $XMLWriter->writeElement('DocumentoLegal2', $this->legalDocument2);
         }
 
-        if ($this->name) {
-            $XMLWriter->writeElement( 'Nome', $this->name );
-        } else {
-            throw new RequiredFieldException( 'Field name of the Customer object is required' );
-        }
+        $XMLWriter->writeElement('Nome', $this->name);
 
         if ($this->email) {
-            $XMLWriter->writeElement( 'Email', $this->email );
+            $XMLWriter->writeElement('Email', $this->email);
         }
 
         if ($this->sex) {
-            $XMLWriter->writeElement( 'Sexo', $this->sex );
+            $XMLWriter->writeElement('Sexo', $this->sex);
         }
 
         if ($this->birthDate) {
-            $XMLWriter->writeElement( 'Nascimento', $this->birthDate->format( self::DATE_TIME_FORMAT ) );
+            $XMLWriter->writeElement('Nascimento', $this->birthDate->format(self::DATE_TIME_FORMAT));
         }
 
-        if ($this->address) {
-            $this->address->toXML( $XMLWriter );
-        } else {
-            throw new RequiredFieldException( 'Field Address of the Customer object is required' );
+        $this->address->toXML($XMLWriter);
+
+        $XMLWriter->startElement('Telefones');
+
+        foreach ($this->phones as $phone) {
+            $phone->toXML($XMLWriter);
         }
 
-        if ($this->phones && count( $this->phones ) > 0) {
-            $XMLWriter->startElement( 'Telefones' );
+        $XMLWriter->endElement(); // Telefones
 
-            foreach ($this->phones as $phone) {
-                $phone->toXML( $XMLWriter );
-            }
-
-            $XMLWriter->endElement();
-        } else {
-            throw new RequiredFieldException( 'Field Phones of the Customer object is required' );
-        }
+        $XMLWriter->endElement(); // $this->getXMLWrapperElement()
     }
 }

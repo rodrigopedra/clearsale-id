@@ -21,74 +21,51 @@ abstract class AbstractEnvironment
     /** @var  \Psr\Log\LoggerInterface|null */
     private $logger;
 
-    /**
-     * AbstractEnvironment constructor.
-     *
-     * @param  string                        $entityCode
-     * @param  \Psr\Log\LoggerInterface|null $logger
-     */
-    public function __construct( $entityCode, LoggerInterface $logger = null )
-    {
+    public function __construct(
+        string $regularEndpoint,
+        string $extendedEnpoint,
+        string $entityCode,
+        ?LoggerInterface $logger
+    ) {
+        $this->regularEndpoint = $regularEndpoint;
+        $this->extendedEnpoint = $extendedEnpoint;
         $this->entityCode = $entityCode;
-        $this->logger     = $logger;
-        $this->debug      = false;
+        $this->logger = $logger;
+        $this->debug = false;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityCode()
+    public function getEntityCode(): string
     {
         return $this->entityCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getRegularEndpoint()
+    public function getRegularEndpoint(): string
     {
         return $this->regularEndpoint;
     }
 
-    /**
-     * @return string
-     */
-    public function getExtendedEndpoint()
+    public function getExtendedEndpoint(): string
     {
         return $this->extendedEnpoint;
     }
 
-    /**
-     * @param  string $message
-     * @param  array  $context
-     */
-    public function log( $message, array $context = [] )
+    public function log(string $message, array $context = []): void
     {
-        if (!$this->isDebug()) {
+        if (! $this->isDebug()) {
             return;
         }
 
-        if (!$this->logger) {
-            return;
+        if ($this->logger) {
+            $this->logger->debug($message, $context);
         }
-
-        $this->logger->debug( $message, $context );
     }
 
-    /**
-     * @return bool
-     */
-    public function isDebug()
+    public function isDebug(): bool
     {
-        return (bool)$this->debug;
+        return $this->debug;
     }
 
-    /**
-     * @param  bool $debug
-     *
-     * @return $this
-     */
-    public function setDebug( $debug = true )
+    public function setDebug(bool $debug = true): self
     {
         $this->debug = $debug;
 

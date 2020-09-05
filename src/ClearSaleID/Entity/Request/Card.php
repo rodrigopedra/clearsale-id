@@ -2,21 +2,19 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
-use XMLWriter;
 
 class Card implements XmlEntityInterface
 {
-    const DINERS           = 1;
-    const MASTERCARD       = 2;
-    const VISA             = 3;
-    const OUTROS           = 4;
-    const AMERICAN_EXPRESS = 5;
-    const HIPERCARD        = 6;
-    const AURA             = 7;
+    public const DINERS = 1;
+    public const MASTERCARD = 2;
+    public const VISA = 3;
+    public const OUTROS = 4;
+    public const AMERICAN_EXPRESS = 5;
+    public const HIPERCARD = 6;
+    public const AURA = 7;
 
-    private static $cards = [
+    private static $cardTypes = [
         self::DINERS,
         self::MASTERCARD,
         self::VISA,
@@ -26,71 +24,62 @@ class Card implements XmlEntityInterface
         self::AURA,
     ];
 
-    /** @var  string */
-    private $numberHash;
+    /** @var  string|null */
+    private $numberHash = null;
 
-    /** @var  string */
-    private $bin;
+    /** @var  string|null */
+    private $bin = null;
 
-    /** @var  string */
-    private $lastDigits;
+    /** @var  string|null */
+    private $lastDigits = null;
 
-    /** @var  string */
-    private $type;
+    /** @var  string|null */
+    private $type = null;
 
-    /** @var  string */
-    private $expirationDate;
+    /** @var  string|null */
+    private $expirationDate = null;
 
-    /** @var  string */
-    private $name;
+    /** @var  string|null */
+    private $name = null;
 
-    /**
-     * @return string
-     */
-    public function getNumberHash()
+    public static function create(): self
+    {
+        return new self();
+    }
+
+    public function getNumberHash(): ?string
     {
         return $this->numberHash;
     }
 
-    /**
-     * @param  string $numberHash
-     *
-     * @return $this
-     */
-    public function setNumberHash( $numberHash )
+    public function setNumberHash(string $numberHash): self
     {
-        $numberHash = trim( $numberHash );
+        $numberHash = \trim($numberHash);
 
-        if (strlen( $numberHash ) > 40) {
-            throw new InvalidArgumentException( sprintf( 'Card number hash should be no longer than 40 characters (%s)',
-                $numberHash ) );
+        if (\strlen($numberHash) > 40) {
+            throw new \InvalidArgumentException(
+                \sprintf('Card number hash should be no longer than 40 characters (%s)', $numberHash)
+            );
         }
 
-        $this->numberHash = $numberHash;
+        $this->numberHash = $numberHash ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBin()
+    public function getBin(): ?string
     {
         return $this->bin;
     }
 
-    /**
-     * @param  string $bin
-     *
-     * @return $this
-     */
-    public function setBin( $bin )
+    public function setBin(string $bin): self
     {
-        $bin = trim( $bin );
+        $bin = \trim($bin);
 
-        if (strlen( $bin ) !== 6) {
-            throw new InvalidArgumentException( sprintf( 'Bin number should contain the first 6 characters in the card number (%s)',
-                $bin ) );
+        if (\strlen($bin) !== 6) {
+            throw new \InvalidArgumentException(
+                \sprintf('Bin number should contain the first 6 characters in the card number (%s)', $bin)
+            );
         }
 
         $this->bin = $bin;
@@ -98,26 +87,19 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastDigits()
+    public function getLastDigits(): ?string
     {
         return $this->lastDigits;
     }
 
-    /**
-     * @param  string $lastDigits
-     *
-     * @return $this
-     */
-    public function setLastDigits( $lastDigits )
+    public function setLastDigits(string $lastDigits): self
     {
-        $lastDigits = trim( $lastDigits );
+        $lastDigits = \trim($lastDigits);
 
-        if (strlen( $lastDigits ) !== 4) {
-            throw new InvalidArgumentException( sprintf( 'Last digits should contain the last 4 characters in the card number (%s)',
-                $lastDigits ) );
+        if (\strlen($lastDigits) !== 4) {
+            throw new \InvalidArgumentException(
+                \sprintf('Last digits should contain the last 4 characters in the card number (%s)', $lastDigits)
+            );
         }
 
         $this->lastDigits = $lastDigits;
@@ -125,23 +107,15 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param  string $type
-     *
-     * @return $this
-     */
-    public function setType( $type )
+    public function setType(int $type): self
     {
-        if (!in_array( $type, self::$cards )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid type (%s)', $type ) );
+        if (! \in_array($type, self::$cardTypes)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid type (%s)', $type));
         }
 
         $this->type = $type;
@@ -149,73 +123,54 @@ class Card implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExpirationDate()
+    public function getExpirationDate(): ?string
     {
         return $this->expirationDate;
     }
 
-    /**
-     * @param  string $expirationDate
-     *
-     * @return $this
-     */
-    public function setExpirationDate( $expirationDate )
+    public function setExpirationDate(string $expirationDate): self
     {
-        $this->expirationDate = $expirationDate;
+        $this->expirationDate = \trim($expirationDate) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string $name
-     *
-     * @return $this
-     */
-    public function setName( $name )
+    public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = \trim($name) ?: null;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
         if ($this->numberHash) {
-            $XMLWriter->writeElement( 'HashNumeroCartao', $this->numberHash );
+            $XMLWriter->writeElement('HashNumeroCartao', $this->numberHash);
         }
 
         if ($this->bin) {
-            $XMLWriter->writeElement( 'BinCartao', $this->bin );
+            $XMLWriter->writeElement('BinCartao', $this->bin);
         }
 
         if ($this->lastDigits) {
-            $XMLWriter->writeElement( 'Cartao4Ultimos', $this->lastDigits );
+            $XMLWriter->writeElement('Cartao4Ultimos', $this->lastDigits);
         }
 
         if ($this->type) {
-            $XMLWriter->writeElement( 'TipoCartao', $this->type );
+            $XMLWriter->writeElement('TipoCartao', $this->type);
         }
 
         if ($this->expirationDate) {
-            $XMLWriter->writeElement( 'DataValidadeCartao', $this->expirationDate );
+            $XMLWriter->writeElement('DataValidadeCartao', $this->expirationDate);
         }
 
         if ($this->name) {
-            $XMLWriter->writeElement( 'NomeTitularCartao', $this->name );
+            $XMLWriter->writeElement('NomeTitularCartao', $this->name);
         }
     }
 }

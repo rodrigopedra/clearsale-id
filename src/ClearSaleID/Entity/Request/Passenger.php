@@ -2,20 +2,18 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Passenger implements XmlEntityInterface
 {
-    const DOCUMENT_TYPE_CPF            = 1;
-    const DOCUMENT_TYPE_CNPJ           = 2;
-    const DOCUMENT_TYPE_RG             = 3;
-    const DOCUMENT_TYPE_IE             = 4;
-    const DOCUMENT_TYPE_PASSAPORTE     = 5;
-    const DOCUMENT_TYPE_CTPS           = 6;
-    const DOCUMENT_TYPE_TITULO_ELEITOR = 7;
+    public const DOCUMENT_TYPE_CPF = 1;
+    public const DOCUMENT_TYPE_CNPJ = 2;
+    public const DOCUMENT_TYPE_RG = 3;
+    public const DOCUMENT_TYPE_IE = 4;
+    public const DOCUMENT_TYPE_PASSAPORTE = 5;
+    public const DOCUMENT_TYPE_CTPS = 6;
+    public const DOCUMENT_TYPE_TITULO_ELEITOR = 7;
 
     private $documentTypes = [
         self::DOCUMENT_TYPE_CPF,
@@ -24,14 +22,14 @@ class Passenger implements XmlEntityInterface
         self::DOCUMENT_TYPE_IE,
         self::DOCUMENT_TYPE_PASSAPORTE,
         self::DOCUMENT_TYPE_CTPS,
-        self::DOCUMENT_TYPE_TITULO_ELEITOR
+        self::DOCUMENT_TYPE_TITULO_ELEITOR,
     ];
 
     /** @var  string */
     private $name;
 
-    /** @var  string */
-    private $frequentFlyerCard;
+    /** @var  ?string */
+    private $frequentFlyerCard = null;
 
     /** @var  int */
     private $legalDocumentType;
@@ -39,81 +37,59 @@ class Passenger implements XmlEntityInterface
     /** @var  string */
     private $legalDocument;
 
-    /**
-     * @param  string $name
-     * @param  int    $legalDocumentType
-     * @param  string $legalDocument
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Passenger
-     */
-    public static function create( $name, $legalDocumentType, $legalDocument )
+    public function __construct(string $name, int $legalDocumentType, string $legalDocument)
     {
-        $instance = new self;
-
-        $instance->setName( $name );
-        $instance->setLegalDocumentType( $legalDocumentType );
-        $instance->setLegalDocument( $legalDocument );
-
-        return $instance;
+        $this->setName($name);
+        $this->setLegalDocumentType($legalDocumentType);
+        $this->setLegalDocument($legalDocument);
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public static function create(string $name, int $legalDocumentType, string $legalDocument): self
+    {
+        return new self($name, $legalDocumentType, $legalDocument);
+    }
+
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string $name
-     *
-     * @return $this
-     */
-    public function setName( $name )
+    public function setName(string $name): self
     {
+        $name = \trim($name);
+
+        if (\strlen($name) === 0) {
+            throw new RequiredFieldException('Name is required');
+        }
+
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFrequentFlyerCard()
+    public function getFrequentFlyerCard(): ?string
     {
         return $this->frequentFlyerCard;
     }
 
-    /**
-     * @param  string $frequentFlyerCard
-     *
-     * @return $this
-     */
-    public function setFrequentFlyerCard( $frequentFlyerCard )
+    public function setFrequentFlyerCard(string $frequentFlyerCard): self
     {
-        $this->frequentFlyerCard = $frequentFlyerCard;
+        $this->frequentFlyerCard = \trim($frequentFlyerCard) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getLegalDocumentType()
+    public function getLegalDocumentType(): int
     {
         return $this->legalDocumentType;
     }
 
-    /**
-     * @param  int $legalDocumentType
-     *
-     * @return $this
-     */
-    public function setLegalDocumentType( $legalDocumentType )
+    public function setLegalDocumentType(int $legalDocumentType): self
     {
-        if (!in_array( intval( $legalDocumentType ), $this->documentTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid document type (%s)', $legalDocumentType ) );
+        if (! \in_array($legalDocumentType, $this->documentTypes)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Invalid document type (%s)', $legalDocumentType)
+            );
         }
 
         $this->legalDocumentType = $legalDocumentType;
@@ -121,57 +97,37 @@ class Passenger implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLegalDocument()
+    public function getLegalDocument(): string
     {
         return $this->legalDocument;
     }
 
-    /**
-     * @param  string $legalDocument
-     *
-     * @return $this
-     */
-    public function setLegalDocument( $legalDocument )
+    public function setLegalDocument(string $legalDocument): self
     {
+        $legalDocument = \trim($legalDocument);
+
+        if (\strlen($legalDocument) === 0) {
+            throw new RequiredFieldException('Legal Document is required');
+        }
+
         $this->legalDocument = $legalDocument;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter)
     {
-        $XMLWriter->startElement( 'Passageiro' );
+        $XMLWriter->startElement('Passageiro');
 
-        if ($this->name) {
-            $XMLWriter->writeElement( 'Nome', $this->name );
-        } else {
-            throw new RequiredFieldException( 'Field Nome of the Passenger object is required' );
-        }
+        $XMLWriter->writeElement('Nome', $this->name);
 
         if ($this->frequentFlyerCard) {
-            $XMLWriter->writeElement( 'ProgramaFidelidade', $this->frequentFlyerCard );
+            $XMLWriter->writeElement('ProgramaFidelidade', $this->frequentFlyerCard);
         }
 
-        if ($this->legalDocumentType) {
-            $XMLWriter->writeElement( 'TipoDocumentoLegal', $this->legalDocumentType );
-        } else {
-            throw new RequiredFieldException( 'Field LegalDocumentType of the Passenger object is required' );
-        }
+        $XMLWriter->writeElement('TipoDocumentoLegal', $this->legalDocumentType);
+        $XMLWriter->writeElement('DocumentoLegal', $this->legalDocument);
 
-        if ($this->legalDocument) {
-            $XMLWriter->writeElement( 'DocumentoLegal', $this->legalDocument );
-        } else {
-            throw new RequiredFieldException( 'Field LegalDocument of the Passenger object is required' );
-        }
-
-        $XMLWriter->endElement();
+        $XMLWriter->endElement(); // Passageiro
     }
 }

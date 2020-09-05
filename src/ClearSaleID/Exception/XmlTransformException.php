@@ -2,9 +2,6 @@
 
 namespace RodrigoPedra\ClearSaleID\Exception;
 
-use Exception;
-
-class XmlTransformException extends Exception
+class XmlTransformException extends \RuntimeException
 {
-
 }

@@ -2,9 +2,6 @@
 
 namespace RodrigoPedra\ClearSaleID\Exception;
 
-use Exception;
-
-class RequiredFieldException extends Exception
+class RequiredFieldException extends \RuntimeException
 {
-
 }

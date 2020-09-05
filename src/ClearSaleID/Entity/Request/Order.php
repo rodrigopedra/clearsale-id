@@ -2,20 +2,17 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use DateTime;
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Order implements XmlEntityInterface
 {
-    const ECOMMERCE_B2B    = 'b2b';
-    const ECOMMERCE_B2C    = 'b2c';
-    const STATUS_NEW       = 0;
-    const STATUS_APPROVED  = 9;
-    const STATUS_CANCELLED = 41;
-    const STATUS_REJECTED  = 45;
+    public const ECOMMERCE_B2B = 'b2b';
+    public const ECOMMERCE_B2C = 'b2c';
+    public const STATUS_NEW = 0;
+    public const STATUS_APPROVED = 9;
+    public const STATUS_CANCELLED = 41;
+    public const STATUS_REJECTED = 45;
 
     private static $ecommerceTypes = [
         self::ECOMMERCE_B2B,
@@ -35,20 +32,20 @@ class Order implements XmlEntityInterface
     /** @var  string */
     private $id;
 
-    /** @var  \DateTime */
+    /** @var  \DateTimeInterface */
     private $date;
 
-    /** @var  string */
-    private $email;
+    /** @var  string|null */
+    private $email = null;
 
-    /** @var  string */
-    private $channel;
+    /** @var  string|null */
+    private $channel = null;
 
-    /** @var  string */
-    private $ecommerceType;
+    /** @var  string|null */
+    private $ecommerceType = null;
 
-    /** @var  float */
-    private $shippingValue;
+    /** @var  float|null */
+    private $shippingValue = null;
 
     /** @var  float */
     private $totalItems;
@@ -56,32 +53,32 @@ class Order implements XmlEntityInterface
     /** @var  float */
     private $totalOrder;
 
-    /** @var  int */
-    private $quantityInstallments;
+    /** @var  int|null */
+    private $quantityInstallments = null;
 
-    /** @var  string */
-    private $deliveryTime;
+    /** @var  string|null */
+    private $deliveryTime = null;
 
-    /** @var  int */
-    private $quantityItems;
+    /** @var  int|null */
+    private $quantityItems = null;
 
-    /** @var  int */
-    private $quantityPaymentTypes;
+    /** @var  int|null */
+    private $quantityPaymentTypes = null;
 
-    /** @var  string */
-    private $ip;
+    /** @var  string|null */
+    private $ip = null;
 
-    /** @var  string */
-    private $notes;
+    /** @var  string|null */
+    private $notes = null;
 
-    /** @var  int */
-    private $status;
+    /** @var  int|null */
+    private $status = null;
 
-    /** @var  string */
-    private $origin;
+    /** @var  string|null */
+    private $origin = null;
 
-    /** @var  \DateTime */
-    private $reservationDate;
+    /** @var  \DateTimeInterface|null */
+    private $reservationDate = null;
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData */
     private $customerBillingData;
@@ -90,50 +87,92 @@ class Order implements XmlEntityInterface
     private $customerShippingData;
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Payment[] */
-    private $payments;
+    private $payments = [];
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Item[] */
-    private $items;
+    private $items = [];
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[] */
-    private $passengers;
+    private $passengers = [];
 
     /** @var  \RodrigoPedra\ClearSaleID\Entity\Request\Connection[] */
-    private $connections;
+    private $connections = [];
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
-     * @param  int                                                           $id
-     * @param  \DateTime                                                     $date
-     * @param  string                                                        $email
-     * @param  float                                                         $totalItems
-     * @param  float                                                         $totalOrder
-     * @param  int                                                           $quantityInstallments
-     * @param  string                                                        $ip
-     * @param  string                                                        $origin
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
-     */
-    public static function createEcommerceOrder(
+    public function __construct(
         FingerPrint $fingerPrint,
-        $id,
-        DateTime $date,
-        $email,
-        $totalItems,
-        $totalOrder,
-        $quantityInstallments,
-        $ip,
-        $origin,
-        CustomerBillingData $customerBillingData,
-        CustomerShippingData $customerShippingData,
+        string $id,
+        \DateTimeInterface $date,
+        float $totalItems,
+        float $totalOrder,
+        CustomerBillingData $billingData,
+        CustomerShippingData $shippingData,
         Payment $payment,
         Item $item
     ) {
-        return static::create(
+        $this->setFingerPrint($fingerPrint);
+        $this->setId($id);
+        $this->setDate($date);
+        $this->setTotalItems($totalItems);
+        $this->setTotalOrder($totalOrder);
+        $this->setBillingData($billingData);
+        $this->setShippingData($shippingData);
+        $this->addPayment($payment);
+        $this->addItem($item);
+    }
+
+    public static function createEcommerceOrder(
+        FingerPrint $fingerPrint,
+        string $id,
+        \DateTimeInterface $date,
+        string $email,
+        float $totalItems,
+        float $totalOrder,
+        int $quantityInstallments,
+        string $ip,
+        string $origin,
+        CustomerBillingData $billingData,
+        CustomerShippingData $shippingData,
+        Payment $payment,
+        Item $item
+    ): self {
+        $instance = new self(
+            $fingerPrint,
+            $id,
+            $date,
+            $totalItems,
+            $totalOrder,
+            $billingData,
+            $shippingData,
+            $payment,
+            $item
+        );
+
+        $instance->setEmail($email);
+        $instance->setQuantityInstallments($quantityInstallments);
+        $instance->setIp($ip);
+        $instance->setOrigin($origin);
+
+        return $instance;
+    }
+
+    public static function createAirlineTicketOrder(
+        FingerPrint $fingerPrint,
+        string $id,
+        \DateTimeInterface $date,
+        string $email,
+        float $totalItems,
+        float $totalOrder,
+        int $quantityInstallments,
+        string $ip,
+        string $origin,
+        CustomerBillingData $customerBillingData,
+        CustomerShippingData $customerShippingData,
+        Payment $payment,
+        Item $item,
+        Passenger $passenger,
+        Connection $connection
+    ): self {
+        $instance = static::createEcommerceOrder(
             $fingerPrint,
             $id,
             $date,
@@ -148,243 +187,90 @@ class Order implements XmlEntityInterface
             $payment,
             $item
         );
-    }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
-     * @param  int                                                           $id
-     * @param  \DateTime                                                     $date
-     * @param  string                                                        $email
-     * @param  float                                                         $totalItems
-     * @param  float                                                         $totalOrder
-     * @param  int                                                           $quantityInstallments
-     * @param  string                                                        $ip
-     * @param  string                                                        $origin
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger            $passenger
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection           $connection
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
-     */
-    public static function createAirlineTicketOrder(
-        FingerPrint $fingerPrint,
-        $id,
-        DateTime $date,
-        $email,
-        $totalItems,
-        $totalOrder,
-        $quantityInstallments,
-        $ip,
-        $origin,
-        CustomerBillingData $customerBillingData,
-        CustomerShippingData $customerShippingData,
-        Payment $payment,
-        Item $item,
-        Passenger $passenger = null,
-        Connection $connection = null
-    ) {
-        return static::create(
-            $fingerPrint,
-            $id,
-            $date,
-            $email,
-            $totalItems,
-            $totalOrder,
-            $quantityInstallments,
-            $ip,
-            $origin,
-            $customerBillingData,
-            $customerShippingData,
-            $payment,
-            $item,
-            $passenger,
-            $connection
-        );
-    }
-
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint          $fingerPrint
-     * @param  int                                                           $id
-     * @param  \DateTime                                                     $date
-     * @param  string                                                        $email
-     * @param  float                                                         $totalItems
-     * @param  float                                                         $totalOrder
-     * @param  int                                                           $quantityInstallments
-     * @param  string                                                        $ip
-     * @param  string                                                        $origin
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData  $customerBillingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $shippingData
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment              $payment
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item                 $item
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger|null       $passenger
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection|null      $connection
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Order
-     */
-    private static function create(
-        FingerPrint $fingerPrint,
-        $id,
-        DateTime $date,
-        $email,
-        $totalItems,
-        $totalOrder,
-        $quantityInstallments,
-        $ip,
-        $origin,
-        CustomerBillingData $customerBillingData,
-        CustomerShippingData $shippingData,
-        Payment $payment,
-        Item $item,
-        Passenger $passenger = null,
-        Connection $connection = null
-    ) {
-        $instance = new self;
-
-        $instance->setFingerPrint( $fingerPrint );
-        $instance->setId( $id );
-        $instance->setDate( $date );
-        $instance->setEmail( $email );
-        $instance->setTotalItems( $totalItems );
-        $instance->setTotalOrder( $totalOrder );
-        $instance->setQuantityInstallments( $quantityInstallments );
-        $instance->setIp( $ip );
-        $instance->setOrigin( $origin );
-        $instance->setBillingData( $customerBillingData );
-        $instance->setShippingData( $shippingData );
-        $instance->addPayment( $payment );
-        $instance->addItem( $item );
-
-        if (null !== $passenger) {
-            $instance->addPassenger( $passenger );
-        }
-
-        if (null !== $connection) {
-            $instance->addConnection( $connection );
-        }
+        $instance->addPassenger($passenger);
+        $instance->addConnection($connection);
 
         return $instance;
     }
 
-    /**
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint
-     */
-    public function getFingerPrint()
+    public function getFingerPrint(): FingerPrint
     {
         return $this->fingerPrint;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\FingerPrint $fingerPrint
-     *
-     * @return $this
-     */
-    public function setFingerPrint( FingerPrint $fingerPrint )
+    public function setFingerPrint(FingerPrint $fingerPrint): self
     {
         $this->fingerPrint = $fingerPrint;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param  int $id
-     *
-     * @return $this
-     */
-    public function setId( $id )
+    public function setId(string $id): self
     {
+        $id = \trim($id);
+
+        if (\strlen($id) === 0) {
+            throw new RequiredFieldException('Order ID is required');
+        }
+
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
 
-    /**
-     * @param  \DateTime $date
-     *
-     * @return $this
-     */
-    public function setDate( DateTime $date )
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param  string $email
-     *
-     * @return $this
-     */
-    public function setEmail( $email )
+    public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = \trim($email) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getChannel()
+    public function getChannel(): ?string
     {
         return $this->channel;
     }
 
-    /**
-     * @param  string $channel
-     *
-     * @return $this
-     */
-    public function setChannel( $channel )
+    public function setChannel(string $channel): self
     {
-        $this->channel = $channel;
+        $this->channel = \trim($channel) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEcommerceType()
+    public function getEcommerceType(): ?string
     {
         return $this->ecommerceType;
     }
 
-    /**
-     * @param  string $ecommerceType
-     *
-     * @return $this
-     */
-    public function setEcommerceType( $ecommerceType )
+    public function setEcommerceType(string $ecommerceType): self
     {
-        if (!in_array( $ecommerceType, self::$ecommerceTypes )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid e-commerce type (%s)', $ecommerceType ) );
+        if (! \in_array($ecommerceType, self::$ecommerceTypes)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Invalid e-commerce type (%s)', $ecommerceType)
+            );
         }
 
         $this->ecommerceType = $ecommerceType;
@@ -392,106 +278,77 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingValue()
+    public function getShippingValue(): ?float
     {
         return $this->shippingValue;
     }
 
-    /**
-     * @param  float $shippingValue
-     *
-     * @return $this
-     */
-    public function setShippingValue( $shippingValue )
+    public function setShippingValue(float $shippingValue): self
     {
-        if (preg_match( '/^(?:\d*\.)?\d+$/', $shippingValue ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Shipping value should be a non-negative number (%s)',
-                $shippingValue ) );
+        if ($shippingValue < 0.0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Shipping value value should be a non-negative number (%s)', $shippingValue)
+            );
         }
 
-        $this->shippingValue = (float)number_format( $shippingValue, 4, '.', '' );
+        $this->shippingValue = \floatval(\number_format($shippingValue, 4, '.', ''));
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalItems()
+    public function getTotalItems(): float
     {
         return $this->totalItems;
     }
 
-    /**
-     * @param  float $totalItems
-     *
-     * @return $this
-     */
-    public function setTotalItems( $totalItems )
+    public function setTotalItems(float $totalItems): self
     {
-        if (preg_match( '/^(?:\d*\.)?\d+$/', $totalItems ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Items total value should be a non-negative number (%s)',
-                $totalItems ) );
+        if ($totalItems < 0.0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Items total value should be a non-negative number (%s)', $totalItems)
+            );
         }
 
-        $this->totalItems = (float)number_format( $totalItems, 4, '.', '' );
+        $this->totalItems = \floatval(\number_format($totalItems, 4, '.', ''));
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalOrder()
+    public function getTotalOrder(): float
     {
         return $this->totalOrder;
     }
 
-    /**
-     * @param  float $totalOrder
-     *
-     * @return $this
-     */
-    public function setTotalOrder( $totalOrder )
+    public function setTotalOrder(float $totalOrder): self
     {
-        if (preg_match( '/^(?:\d*\.)?\d+$/', $totalOrder ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Order total value should be a non-negative number (%s)',
-                $totalOrder ) );
+        if ($totalOrder < 0.0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Order total value should be a non-negative number (%s)', $totalOrder)
+            );
         }
 
-        $this->totalOrder = (float)number_format( $totalOrder, 4, '.', '' );
+        $this->totalOrder = \floatval(\number_format($totalOrder, 4, '.', ''));
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantityInstallments()
+    public function getQuantityInstallments(): ?int
     {
         return $this->quantityInstallments;
     }
 
-    /**
-     * @param  int $quantityInstallments
-     *
-     * @return $this
-     */
-    public function setQuantityInstallments( $quantityInstallments )
+    public function setQuantityInstallments(int $quantityInstallments): self
     {
-        if (preg_match( '/^\d+$/', $quantityInstallments ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Installments quantity should be a non-negative integer (%s)',
-                $quantityInstallments ) );
+        if ($quantityInstallments < 0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Installments quantity should be a non-negative integer (%s)', $quantityInstallments)
+            );
         }
 
-        $quantityInstallments = intval( $quantityInstallments );
-
         if ($quantityInstallments > 99) {
-            throw new InvalidArgumentException( sprintf( 'Installments quantity should be less than 99 (%s)',
-                $quantityInstallments ) );
+            throw new \InvalidArgumentException(
+                \sprintf('Installments quantity should be less than 99 (%s)', $quantityInstallments)
+            );
         }
 
         $this->quantityInstallments = $quantityInstallments;
@@ -499,133 +356,87 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeliveryTime()
+    public function getDeliveryTime(): ?string
     {
         return $this->deliveryTime;
     }
 
-    /**
-     * @param  string $deliveryTime
-     *
-     * @return $this
-     */
-    public function setDeliveryTime( $deliveryTime )
+    public function setDeliveryTime(string $deliveryTime): self
     {
-        $this->deliveryTime = $deliveryTime;
+        $this->deliveryTime = \trim($deliveryTime) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantityItems()
+    public function getQuantityItems(): ?int
     {
         return $this->quantityItems;
     }
 
-    /**
-     * @param  int $quantityItems
-     *
-     * @return $this
-     */
-    public function setQuantityItems( $quantityItems )
+    public function setQuantityItems(int $quantityItems): self
     {
-        if (preg_match( '/^\d+$/', $quantityItems ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Items quantity should be a non-negative integer (%s)',
-                $quantityItems ) );
+        if ($quantityItems < 0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Items quantity should be a non-negative integer (%s)', $quantityItems)
+            );
         }
 
-        $this->quantityItems = intval( $quantityItems );
+        $this->quantityItems = $quantityItems;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantityPaymentTypes()
+    public function getQuantityPaymentTypes(): ?int
     {
         return $this->quantityPaymentTypes;
     }
 
-    /**
-     * @param  int $quantityPaymentTypes
-     *
-     * @return $this
-     */
-    public function setQuantityPaymentTypes( $quantityPaymentTypes )
+    public function setQuantityPaymentTypes(int $quantityPaymentTypes): self
     {
-        if (preg_match( '/^\d+$/', $quantityPaymentTypes ) !== 1) {
-            throw new InvalidArgumentException( sprintf( 'Payment types quantity should be a non-negative integer (%s)',
-                $quantityPaymentTypes ) );
+        if ($quantityPaymentTypes < 0) {
+            throw new \InvalidArgumentException(
+                \sprintf('Payment types quantity should be a non-negative integer (%s)', $quantityPaymentTypes)
+            );
         }
 
-        $this->quantityPaymentTypes = intval( $quantityPaymentTypes );
+        $this->quantityPaymentTypes = $quantityPaymentTypes;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIp()
+    public function getIp(): ?string
     {
         return $this->ip;
     }
 
-    /**
-     * @param  string $ip
-     *
-     * @return $this
-     */
-    public function setIp( $ip )
+    public function setIp(string $ip): self
     {
-        $this->ip = $ip;
+        $this->ip = \trim($ip) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNotes()
+    public function getNotes(): ?string
     {
         return $this->notes;
     }
 
-    /**
-     * @param  string $notes
-     *
-     * @return $this
-     */
-    public function setNotes( $notes )
+    public function setNotes(string $notes): self
     {
-        $this->notes = $notes;
+        $this->notes = \trim($notes) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatus()
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    /**
-     * @param  int $status
-     *
-     * @return $this
-     */
-    public function setStatus( $status )
+    public function setStatus(int $status): self
     {
-        if (!in_array( intval( $status ), self::$statuses )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid status (%s)', $status ) );
+        if (! \in_array($status, self::$statuses)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid status (%s)', $status));
         }
 
         $this->status = $status;
@@ -633,80 +444,48 @@ class Order implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrigin()
+    public function getOrigin(): ?string
     {
         return $this->origin;
     }
 
-    /**
-     * @param  string $origin
-     *
-     * @return $this
-     */
-    public function setOrigin( $origin )
+    public function setOrigin(string $origin): self
     {
-        $this->origin = $origin;
+        $this->origin = \trim($origin) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getReservationDate()
+    public function getReservationDate(): ?\DateTimeInterface
     {
         return $this->reservationDate;
     }
 
-    /**
-     * @param  \DateTime $reservationDate
-     *
-     * @return $this
-     */
-    public function setReservationDate( DateTime $reservationDate )
+    public function setReservationDate(\DateTimeInterface $reservationDate): self
     {
         $this->reservationDate = $reservationDate;
 
         return $this;
     }
 
-    /**
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData
-     */
-    public function getBillingData()
+    public function getBillingData(): CustomerBillingData
     {
         return $this->customerBillingData;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerBillingData $customerBillingData
-     *
-     * @return $this
-     */
-    public function setBillingData( CustomerBillingData $customerBillingData )
+    public function setBillingData(CustomerBillingData $customerBillingData): self
     {
         $this->customerBillingData = $customerBillingData;
 
         return $this;
     }
 
-    /**
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData
-     */
-    public function getShippingData()
+    public function getShippingData(): CustomerShippingData
     {
         return $this->customerShippingData;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\CustomerShippingData $customerShippingData
-     *
-     * @return $this
-     */
-    public function setShippingData( CustomerShippingData $customerShippingData )
+    public function setShippingData(CustomerShippingData $customerShippingData): self
     {
         $this->customerShippingData = $customerShippingData;
 
@@ -716,52 +495,45 @@ class Order implements XmlEntityInterface
     /**
      * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment[]
      */
-    public function getPayments()
+    public function getPayments(): array
     {
         return $this->payments;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment[] $payments
-     *
-     * @return $this
-     */
-    public function setPayments( $payments )
+    public function setPayments(iterable $payments): self
     {
         foreach ($payments as $payment) {
-            $this->addPayment( $payment );
+            $this->addPayment($payment);
+        }
+
+        if (\count($this->payments) === 0) {
+            throw new RequiredFieldException('Order requires at least one payment');
         }
 
         return $this;
     }
 
-    /**
-     * @param  int $index
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Payment
-     */
-    public function getPayment( $index )
+    public function getPayment(int $index): Payment
     {
-        return $this->payments[ $index ];
+        return $this->payments[$index];
     }
 
     /**
      * @return \RodrigoPedra\ClearSaleID\Entity\Request\Item[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item[] $items
-     *
-     * @return $this
-     */
-    public function setItems( $items )
+    public function setItems(iterable $items): self
     {
         foreach ($items as $item) {
-            $this->addItem( $item );
+            $this->addItem($item);
+        }
+
+        if (\count($this->items) === 0) {
+            throw new RequiredFieldException('Order requires at least one item');
         }
 
         return $this;
@@ -770,20 +542,15 @@ class Order implements XmlEntityInterface
     /**
      * @return \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[]
      */
-    public function getPassengers()
+    public function getPassengers(): array
     {
         return $this->passengers;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger[] $passengers
-     *
-     * @return $this
-     */
-    public function setPassengers( $passengers )
+    public function setPassengers(iterable $passengers): self
     {
         foreach ($passengers as $passenger) {
-            $this->addPassenger( $passenger );
+            $this->addPassenger($passenger);
         }
 
         return $this;
@@ -792,220 +559,151 @@ class Order implements XmlEntityInterface
     /**
      * @return \RodrigoPedra\ClearSaleID\Entity\Request\Connection[]
      */
-    public function getConnections()
+    public function getConnections(): array
     {
         return $this->connections;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection[] $connections
-     *
-     * @return $this
-     */
-    public function setConnections( $connections )
+    public function setConnections(iterable $connections): self
     {
         foreach ($connections as $connection) {
-            $this->addConnection( $connection );
+            $this->addConnection($connection);
         }
 
         return $this;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Payment $payment
-     *
-     * @return $this
-     */
-    public function addPayment( Payment $payment )
+    public function addPayment(Payment $payment): self
     {
         $this->payments[] = $payment;
 
         return $this;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Item $item
-     *
-     * @return $this
-     */
-    public function addItem( Item $item )
+    public function addItem(Item $item): self
     {
         $this->items[] = $item;
 
         return $this;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Passenger $passenger
-     *
-     * @return $this
-     */
-    public function addPassenger( Passenger $passenger )
+    public function addPassenger(Passenger $passenger): self
     {
         $this->passengers[] = $passenger;
 
         return $this;
     }
 
-    /**
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Connection $connection
-     *
-     * @return $this
-     */
-    public function addConnection( Connection $connection )
+    public function addConnection(Connection $connection): self
     {
         $this->connections[] = $connection;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        $XMLWriter->startElement( 'ClearID_Input' );
+        $XMLWriter->startElement('ClearID_Input');
 
-        if ($this->fingerPrint) {
-            $this->fingerPrint->toXML( $XMLWriter );
-        } else {
-            throw new RequiredFieldException( 'Field FingerPrint of the Order object is required' );
-        }
+        $this->fingerPrint->toXML($XMLWriter);
 
-        $XMLWriter->startElement( 'Pedido' );
+        $XMLWriter->startElement('Pedido');
 
-        if ($this->id) {
-            $XMLWriter->writeElement( 'PedidoID', $this->id );
-        } else {
-            throw new RequiredFieldException( 'Field ID of the Order object is required' );
-        }
-
-        if ($this->date) {
-            $XMLWriter->writeElement( 'Data', $this->date->format( self::DATE_TIME_FORMAT ) );
-        } else {
-            throw new RequiredFieldException( 'Field Date of the Order object is required' );
-        }
+        $XMLWriter->writeElement('PedidoID', $this->id);
+        $XMLWriter->writeElement('Data', $this->date->format(self::DATE_TIME_FORMAT));
 
         if ($this->email) {
-            $XMLWriter->writeElement( 'Email', $this->email );
+            $XMLWriter->writeElement('Email', $this->email);
         }
 
         if ($this->channel) {
-            $XMLWriter->writeElement( 'CanalID', $this->channel );
+            $XMLWriter->writeElement('CanalID', $this->channel);
         }
 
         if ($this->ecommerceType) {
-            $XMLWriter->writeElement( 'B2B_B2C', $this->ecommerceType );
+            $XMLWriter->writeElement('B2B_B2C', $this->ecommerceType);
         }
 
         if ($this->shippingValue) {
-            $XMLWriter->writeElement( 'ValorFrete', $this->shippingValue );
+            $XMLWriter->writeElement('ValorFrete', $this->shippingValue);
         }
 
-        if (is_numeric( $this->totalItems )) {
-            $XMLWriter->writeElement( 'ValorTotalItens', $this->totalItems );
-        } else {
-            throw new RequiredFieldException( 'Field TotalItems of the Order object is required' );
-        }
-
-        if (is_numeric( $this->totalOrder )) {
-            $XMLWriter->writeElement( 'ValorTotalPedido', $this->totalOrder );
-        } else {
-            throw new RequiredFieldException( 'Field TotalOrder of the Order object is required' );
-        }
+        $XMLWriter->writeElement('ValorTotalItens', $this->totalItems);
+        $XMLWriter->writeElement('ValorTotalPedido', $this->totalOrder);
 
         if ($this->quantityInstallments) {
-            $XMLWriter->writeElement( 'QtdParcelas', $this->quantityInstallments );
+            $XMLWriter->writeElement('QtdParcelas', $this->quantityInstallments);
         }
 
         if ($this->deliveryTime) {
-            $XMLWriter->writeElement( 'PrazoEntrega', $this->deliveryTime );
+            $XMLWriter->writeElement('PrazoEntrega', $this->deliveryTime);
         }
 
         if ($this->quantityItems) {
-            $XMLWriter->writeElement( 'QtdItens', $this->quantityItems );
+            $XMLWriter->writeElement('QtdItens', $this->quantityItems);
         }
 
         if ($this->quantityPaymentTypes) {
-            $XMLWriter->writeElement( 'QtdFormasPagamento', $this->quantityPaymentTypes );
+            $XMLWriter->writeElement('QtdFormasPagamento', $this->quantityPaymentTypes);
         }
 
         if ($this->ip) {
-            $XMLWriter->writeElement( 'IP', $this->ip );
+            $XMLWriter->writeElement('IP', $this->ip);
         }
 
         if ($this->notes) {
-            $XMLWriter->writeElement( 'Observacao', $this->notes );
+            $XMLWriter->writeElement('Observacao', $this->notes);
         }
 
         if ($this->status) {
-            $XMLWriter->writeElement( 'Status', $this->status );
+            $XMLWriter->writeElement('Status', $this->status);
         }
 
         if ($this->origin) {
-            $XMLWriter->writeElement( 'Origem', $this->origin );
+            $XMLWriter->writeElement('Origem', $this->origin);
         }
 
         if ($this->reservationDate) {
-            $XMLWriter->writeElement( 'DataReserva', $this->reservationDate->format( self::DATE_TIME_FORMAT ) );
+            $XMLWriter->writeElement('DataReserva', $this->reservationDate->format(self::DATE_TIME_FORMAT));
         }
 
-        if ($this->customerBillingData) {
-            $this->customerBillingData->toXML( $XMLWriter );
-        } else {
-            throw new RequiredFieldException( 'Field CustomerBillingData of the Order object is required' );
+        $this->customerBillingData->toXML($XMLWriter);
+        $this->customerShippingData->toXML($XMLWriter);
+
+        $XMLWriter->startElement('Pagamentos');
+
+        foreach ($this->payments as $payment) {
+            $payment->toXML($XMLWriter);
         }
 
-        if ($this->customerShippingData) {
-            $this->customerShippingData->toXML( $XMLWriter );
-        } else {
-            throw new RequiredFieldException( 'Field CustomerShippingData of the Order object is required' );
+        $XMLWriter->endElement(); // Pagamentos
+
+        $XMLWriter->startElement('Itens');
+
+        foreach ($this->items as $item) {
+            $item->toXML($XMLWriter);
         }
 
-        if ($this->payments && count( $this->payments ) > 0) {
-            $XMLWriter->startElement( 'Pagamentos' );
+        $XMLWriter->endElement(); // Itens
 
-            foreach ($this->payments as $payment) {
-                $payment->toXML( $XMLWriter );
-            }
-
-            $XMLWriter->endElement();
-        } else {
-            throw new RequiredFieldException( 'Field Payments of the Order object is required' );
-        }
-
-        if ($this->items && count( $this->items ) > 0) {
-            $XMLWriter->startElement( 'Itens' );
-
-            foreach ($this->items as $item) {
-                $item->toXML( $XMLWriter );
-            }
-
-            $XMLWriter->endElement();
-        } else {
-            throw new RequiredFieldException( 'Field Items of the Order object is required' );
-        }
-
-        if ($this->passengers && count( $this->passengers ) > 0) {
-            $XMLWriter->startElement( 'Passageiros' );
+        if (\count($this->passengers) > 0) {
+            $XMLWriter->startElement('Passageiros');
 
             foreach ($this->passengers as $passenger) {
-                $passenger->toXML( $XMLWriter );
+                $passenger->toXML($XMLWriter);
             }
 
-            $XMLWriter->endElement();
+            $XMLWriter->endElement(); // Passageiros
         }
 
-        if ($this->connections && count( $this->connections ) > 0) {
-            $XMLWriter->startElement( 'Conexoes' );
+        if (\count($this->connections) > 0) {
+            $XMLWriter->startElement('Conexoes');
 
             foreach ($this->connections as $connection) {
-                $connection->toXML( $XMLWriter );
+                $connection->toXML($XMLWriter);
             }
 
-            $XMLWriter->endElement();
+            $XMLWriter->endElement(); // Conexoes
         }
 
         $XMLWriter->endElement(); // Pedido

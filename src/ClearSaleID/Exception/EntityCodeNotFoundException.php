@@ -2,9 +2,6 @@
 
 namespace RodrigoPedra\ClearSaleID\Exception;
 
-use Exception;
-
-class EntityCodeNotFoundException extends Exception
+class EntityCodeNotFoundException extends \RuntimeException
 {
-
 }

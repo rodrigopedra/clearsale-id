@@ -3,7 +3,6 @@
 namespace RodrigoPedra\ClearSaleID\Service;
 
 use RodrigoPedra\ClearSaleID\Environment\AbstractEnvironment;
-use SoapClient;
 
 class Connector
 {
@@ -16,59 +15,52 @@ class Connector
     /** @var  boolean */
     private $usesRegularEndpoint;
 
-    /**
-     * Connector constructor.
-     *
-     * @param  \RodrigoPedra\ClearSaleID\Environment\AbstractEnvironment $environment
-     */
-    public function __construct( AbstractEnvironment $environment )
+    public function __construct(AbstractEnvironment $environment)
     {
-        $this->environment         = $environment;
+        $this->environment = $environment;
         $this->usesRegularEndpoint = true;
-        $this->client              = null;
+        $this->client = null;
     }
 
     /**
-     * @param  string $function
+     * @param  string  $function
      * @param         $parameters
-     * @param  bool   $usesRegularEndpoint
-     *
+     * @param  bool  $usesRegularEndpoint
      * @return mixed
+     * @throws \SoapFault
      */
-    public function doRequest( $function, $parameters, $usesRegularEndpoint = true )
+    public function doRequest(string $function, $parameters, bool $usesRegularEndpoint = true)
     {
-        $client = ( $usesRegularEndpoint === true )
+        $client = $usesRegularEndpoint
             ? $this->useRegularEndpoint()->getClient()
             : $this->useExtendedEndpoint()->getClient();
 
-        $arguments = [ $function => $parameters ];
-        $options   = [ 'location' => $this->getEndpoint() ];
+        $arguments = [$function => $parameters];
+        $options = ['location' => $this->getEndpoint()];
 
-        $this->environment->log( 'Connector@doRequest: Request', compact( 'arguments', 'options' ) );
+        $this->environment->log('Connector@doRequest: Request', \compact('arguments', 'options'));
 
-        $response = $client->__soapCall( $function, $arguments, $options );
+        $response = $client->__soapCall($function, $arguments, $options);
 
-        $this->environment->log( 'Connector@doRequest: Response', compact( 'response' ) );
+        $this->environment->log('Connector@doRequest: Response', \compact('response'));
 
         return $response;
     }
 
     /**
      * @return \SoapClient
+     * @throws \SoapFault
      */
-    private function getClient()
+    private function getClient(): \SoapClient
     {
-        if (is_null( $this->client )) {
-            $this->client = new SoapClient( $this->getEndpoint() . '?WSDL' );
+        if (\is_null($this->client)) {
+            $this->client = new \SoapClient($this->getEndpoint() . '?WSDL');
         }
 
         return $this->client;
     }
 
-    /**
-     * @return string
-     */
-    private function getEndpoint()
+    private function getEndpoint(): string
     {
         if ($this->usesRegularEndpoint) {
             return $this->environment->getRegularEndpoint();
@@ -77,12 +69,9 @@ class Connector
         return $this->environment->getExtendedEndpoint();
     }
 
-    /**
-     * @return $this
-     */
-    private function useRegularEndpoint()
+    private function useRegularEndpoint(): self
     {
-        if ($this->usesRegularEndpoint === false) {
+        if (! $this->usesRegularEndpoint) {
             $this->client = null;
         }
 
@@ -91,12 +80,9 @@ class Connector
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function useExtendedEndpoint()
+    private function useExtendedEndpoint(): self
     {
-        if ($this->usesRegularEndpoint === true) {
+        if ($this->usesRegularEndpoint) {
             $this->client = null;
         }
 
@@ -105,20 +91,13 @@ class Connector
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityCode()
+    public function getEntityCode(): string
     {
         return $this->environment->getEntityCode();
     }
 
-    /**
-     * @param  string $message
-     * @param  array  $context
-     */
-    public function log( $message, array $context = [] )
+    public function log(string $message, array $context = []): void
     {
-        $this->environment->log( $message, $context );
+        $this->environment->log($message, $context);
     }
 }

@@ -2,10 +2,8 @@
 
 namespace RodrigoPedra\ClearSaleID\Entity\Request;
 
-use InvalidArgumentException;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
 use RodrigoPedra\ClearSaleID\Exception\RequiredFieldException;
-use XMLWriter;
 
 class Item implements XmlEntityInterface
 {
@@ -15,60 +13,45 @@ class Item implements XmlEntityInterface
     /** @var  string */
     private $name;
 
-    /** @var  string */
+    /** @var  float */
     private $value;
 
-    /** @var  string */
+    /** @var  int */
     private $quantity;
 
-    /** @var  string */
-    private $notes;
+    /** @var  string|null */
+    private $notes = null;
 
-    /** @var  string */
-    private $categoryId;
+    /** @var  int|null */
+    private $categoryId = null;
 
-    /** @var  string */
-    private $categoryName;
+    /** @var  string|null */
+    private $categoryName = null;
 
-    /**
-     * Criar Item com campos obrigatórios preenchidos
-     *
-     * @param  string  $id       Código do Produto
-     * @param  string  $name     Nome do Produto
-     * @param  float   $value    Valor Unitário
-     * @param  integer $quantity Quantidade
-     *
-     * @return \RodrigoPedra\ClearSaleID\Entity\Request\Item
-     */
-    public static function create( $id, $name, $value, $quantity )
+    public function __construct(string $id, string $name, float $value, int $quantity)
     {
-        $instance = new self;
-
-        $instance->setId( $id );
-        $instance->setName( $name );
-        $instance->setValue( $value );
-        $instance->setQuantity( $quantity );
-
-        return $instance;
+        $this->setId($id);
+        $this->setName($name);
+        $this->setValue($value);
+        $this->setQuantity($quantity);
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public static function create(string $id, string $name, float $value, int $quantity): self
+    {
+        return new self($id, $name, $value, $quantity);
+    }
+
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param  string $id
-     *
-     * @return $this
-     */
-    public function setId( $id )
+    public function setId(string $id): self
     {
-        if (empty( $id )) {
-            throw new InvalidArgumentException( 'Id is empty!' );
+        $id = \trim($id);
+
+        if (\strlen($id) === 0) {
+            throw new RequiredFieldException('Id is required');
         }
 
         $this->id = $id;
@@ -76,23 +59,17 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string $name
-     *
-     * @return $this
-     */
-    public function setName( $name )
+    public function setName(string $name): self
     {
-        if (empty( $name )) {
-            throw new InvalidArgumentException( 'Name is empty!' );
+        $name = \trim($name);
+
+        if (\strlen($name) === 0) {
+            throw new RequiredFieldException('Name is required');
         }
 
         $this->name = $name;
@@ -100,167 +77,87 @@ class Item implements XmlEntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): float
     {
         return $this->value;
     }
 
-    /**
-     * @param  string $value
-     *
-     * @return $this
-     */
-    public function setValue( $value )
+    public function setValue(float $value): self
     {
-        if (!is_float( $value )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid value', $value ) );
-        }
-
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    /**
-     * @param  string $quantity
-     *
-     * @return $this
-     */
-    public function setQuantity( $quantity )
+    public function setQuantity(int $quantity): self
     {
-        if (!is_int( $quantity )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid quantity', $quantity ) );
-        }
-
         $this->quantity = $quantity;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNotes()
+    public function getNotes(): ?string
     {
         return $this->notes;
     }
 
-    /**
-     * @param  string $notes
-     *
-     * @return $this
-     */
-    public function setNotes( $notes )
+    public function setNotes(string $notes): self
     {
-        $this->notes = $notes;
+        $this->notes = \trim($notes) ?: null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategoryId()
+    public function getCategoryId(): ?int
     {
         return $this->categoryId;
     }
 
-    /**
-     * @param  string $categoryId
-     *
-     * @return $this
-     */
-    public function setCategoryId( $categoryId )
+    public function setCategoryId(int $categoryId): self
     {
-        if (!is_int( $categoryId )) {
-            throw new InvalidArgumentException( sprintf( 'Invalid categoryId', $categoryId ) );
-        }
-
         $this->categoryId = $categoryId;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategoryName()
+    public function getCategoryName(): ?string
     {
         return $this->categoryName;
     }
 
-    /**
-     * @param  string $categoryName
-     *
-     * @return $this
-     */
-    public function setCategoryName( $categoryName )
+    public function setCategoryName(string $categoryName): self
     {
-        if (empty( $categoryName )) {
-            throw new InvalidArgumentException( 'Category name is empty!' );
-        }
-
-        $this->categoryName = $categoryName;
+        $this->categoryName = \trim($categoryName) ?: null;
 
         return $this;
     }
 
-    /**
-     * @param  \XMLWriter $XMLWriter
-     *
-     * @throws \RodrigoPedra\ClearSaleID\Exception\RequiredFieldException
-     */
-    public function toXML( XMLWriter $XMLWriter )
+    public function toXML(\XMLWriter $XMLWriter): void
     {
-        $XMLWriter->startElement( 'Item' );
+        $XMLWriter->startElement('Item');
 
-        if ($this->id) {
-            $XMLWriter->writeElement( 'CodigoItem', $this->id );
-        } else {
-            throw new RequiredFieldException( 'Field ID of the Item object is required' );
-        }
-
-        if ($this->name) {
-            $XMLWriter->writeElement( 'NomeItem', $this->name );
-        } else {
-            throw new RequiredFieldException( 'Field Name of the Item object is required' );
-        }
-
-        if ($this->value) {
-            $XMLWriter->writeElement( 'ValorItem', $this->value );
-        } else {
-            throw new RequiredFieldException( 'Field ItemValue of the Item object is required' );
-        }
-
-        if ($this->quantity) {
-            $XMLWriter->writeElement( 'Quantidade', $this->quantity );
-        } else {
-            throw new RequiredFieldException( 'Field Quantity of the Item object is required' );
-        }
+        $XMLWriter->writeElement('CodigoItem', $this->id);
+        $XMLWriter->writeElement('NomeItem', $this->name);
+        $XMLWriter->writeElement('ValorItem', $this->value);
+        $XMLWriter->writeElement('Quantidade', $this->quantity);
 
         if ($this->notes) {
-            $XMLWriter->writeElement( 'Generico', $this->notes );
+            $XMLWriter->writeElement('Generico', $this->notes);
         }
 
         if ($this->categoryId) {
-            $XMLWriter->writeElement( 'CodigoCategoria', $this->categoryId );
+            $XMLWriter->writeElement('CodigoCategoria', $this->categoryId);
         }
 
         if ($this->categoryName) {
-            $XMLWriter->writeElement( 'NomeCategoria', $this->categoryName );
+            $XMLWriter->writeElement('NomeCategoria', $this->categoryName);
         }
 
-        $XMLWriter->endElement();
+        $XMLWriter->endElement(); // Item
     }
 }

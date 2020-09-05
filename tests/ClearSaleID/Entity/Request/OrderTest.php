@@ -1,10 +1,10 @@
 <?php
 
-namespace RodrigoPedra\ClearSaleID\Test\Entity\Request;
+namespace RodrigoPedra\Tests\ClearSaleID\Entity\Request;
 
 use PHPUnit\Framework\TestCase;
-use RodrigoPedra\ClearSaleID\Entity\Request\Fixtures\OrderFixture;
 use RodrigoPedra\ClearSaleID\Entity\XmlEntityInterface;
+use RodrigoPedra\Tests\ClearSaleID\Entity\Request\Fixtures\OrderFixture;
 
 class OrderTest extends TestCase
 {
@@ -26,20 +26,20 @@ class OrderTest extends TestCase
     /** @test */
     public function testEcommerceOrderToXml()
     {
-        $outputXML       = $this->generateXML( $this->ecommerceOrder );
+        $outputXML = $this->generateXML($this->ecommerceOrder);
         $expectedXmlFile = __DIR__ . '/../../../data/order-ecommerce.xml';
 
-        $this->assertXmlStringEqualsXmlFile( $expectedXmlFile, $outputXML );
+        $this->assertXmlStringEqualsXmlFile($expectedXmlFile, $outputXML);
     }
 
-    private function generateXML( XmlEntityInterface $xmlEntity )
+    private function generateXML(XmlEntityInterface $xmlEntity)
     {
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
-        $xmlWriter->setIndent( false );
+        $xmlWriter->setIndent(false);
 
-        $xmlEntity->toXML( $xmlWriter );
+        $xmlEntity->toXML($xmlWriter);
 
-        return $xmlWriter->outputMemory( true );
+        return $xmlWriter->outputMemory(true);
     }
 }

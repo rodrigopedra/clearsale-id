@@ -1,13 +1,13 @@
 <?php
 
-namespace RodrigoPedra\ClearSaleID\Test\Environment;
+namespace RodrigoPedra\Tests\ClearSaleID\Environment;
 
 use PHPUnit\Framework\TestCase;
 use RodrigoPedra\ClearSaleID\Environment\Sandbox;
 
 class SandboxTest extends TestCase
 {
-    const ENTITY_CODE            = 'ENTITY-CODE';
+    const ENTITY_CODE = 'ENTITY-CODE';
     const REGULAR_WEBSERVICE_URL = 'https://homologacao.clearsale.com.br/integracaov2/service.asmx';
     const EXTENDED_WEBSERICE_URL = 'https://homologacao.clearsale.com.br/integracaov2/ExtendedService.asmx';
 
@@ -16,7 +16,7 @@ class SandboxTest extends TestCase
 
     protected function setUp()
     {
-        $this->environment = new Sandbox( self::ENTITY_CODE );
+        $this->environment = new Sandbox(self::ENTITY_CODE);
     }
 
     protected function tearDown()
@@ -29,32 +29,32 @@ class SandboxTest extends TestCase
     /** @test */
     public function testEntityCode()
     {
-        $this->assertSame( self::ENTITY_CODE, $this->environment->getEntityCode() );
+        $this->assertSame(self::ENTITY_CODE, $this->environment->getEntityCode());
     }
 
     /** @test */
     public function testRegularWebServiceUrl()
     {
-        $this->assertSame( self::REGULAR_WEBSERVICE_URL, $this->environment->getRegularEndpoint() );
+        $this->assertSame(self::REGULAR_WEBSERVICE_URL, $this->environment->getRegularEndpoint());
     }
 
     /** @test */
     public function testExtendedWebServiceUrl()
     {
-        $this->assertSame( self::EXTENDED_WEBSERICE_URL, $this->environment->getExtendedEndpoint() );
+        $this->assertSame(self::EXTENDED_WEBSERICE_URL, $this->environment->getExtendedEndpoint());
     }
 
     /** @test */
     public function testDebug()
     {
-        $this->assertFalse( $this->environment->isDebug() );
+        $this->assertFalse($this->environment->isDebug());
     }
 
     /** @test */
     public function testDebugTrue()
     {
-        $this->environment->setDebug( true );
+        $this->environment->setDebug(true);
 
-        $this->assertTrue( $this->environment->isDebug() );
+        $this->assertTrue($this->environment->isDebug());
     }
 }
